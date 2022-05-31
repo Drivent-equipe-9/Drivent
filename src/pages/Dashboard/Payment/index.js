@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
-import styled from 'styled-components';
+
+import { Modality } from './modality/modality';
 import { StyledTypography } from '../../../components/PersonalInformationForm';
-import useToken from '../../../hooks/useToken';
+import { ContainerEmptyInfo, EmptyInfoText } from './style';
+
 import { getPersonalInformations } from '../../../services/enrollmentApi';
+import useToken from '../../../hooks/useToken';
 
 export default function Payment() {
   const token = useToken();
@@ -28,30 +31,13 @@ export default function Payment() {
       {!haveInfos ? 
         <ContainerEmptyInfo>
           <EmptyInfoText>
-            Você precisa completar sua inscrição antes
+            Você precisa completar sua inscrição antes <br/>
             de prosseguir pra escolha de ingresso
           </EmptyInfoText>
         </ContainerEmptyInfo>
         :
-        ''} 
+        <Modality />
+      } 
     </>
   ); 
 }
-
-const ContainerEmptyInfo = styled.div`
-
-  display: flex;
-  justify-content: 'center';
-  align-items: 'center';
-
-  background-color: red;
-
-`;
-
-const EmptyInfoText = styled.div`
-
-  display: flex;
-  justify-content: 'center';
-  align-items: 'center';
-
-`;
