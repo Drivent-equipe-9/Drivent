@@ -6,7 +6,6 @@ const Container = styled.div`
 `;
 
 const InfoText = styled.span`
-
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 400;
@@ -18,7 +17,6 @@ const InfoText = styled.span`
 `;
 
 const Option = styled.button`
-
   width: 145px;
   height: 145px;
 

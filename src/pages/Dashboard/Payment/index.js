@@ -36,7 +36,7 @@ export default function Payment() {
           </EmptyInfoText>
         </ContainerEmptyInfo>
         :
-        <Modality />
+        <Modality/>
       } 
     </>
   ); 

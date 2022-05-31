@@ -6,6 +6,7 @@ export function Modality() {
       <InfoText>
         Primeiro, escolha sua modalidade de ingresso
       </InfoText>
+      
       <Container>
         <Option>
           <p>Presencial</p>
