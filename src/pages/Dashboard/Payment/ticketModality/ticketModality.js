@@ -1,6 +1,6 @@
 import { Container, InfoText, Option } from './style';
 
-export function Modality() {
+export function TicketModality({ isActive, withPresence }) {
   return(
     <>
       <InfoText>
@@ -8,7 +8,7 @@ export function Modality() {
       </InfoText>
       
       <Container>
-        <Option>
+        <Option  withPresence={withPresence} isActive={isActive}>
           <p>Presencial</p>
           <span>R$ 250</span>
         </Option>

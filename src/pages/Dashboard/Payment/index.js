@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 
-import { Modality } from './modality/modality';
+import { TicketModality } from './ticketModality/ticketModality';
+import { HostingModality } from './hostingModality/hostingModality';
 import { StyledTypography } from '../../../components/PersonalInformationForm';
 import { ContainerEmptyInfo, EmptyInfoText } from './style';
 
@@ -11,6 +12,8 @@ import useToken from '../../../hooks/useToken';
 export default function Payment() {
   const token = useToken();
   const [haveInfos, setHaveInfos] = useState();
+  const [isActive, setIsActive] = useState(true);
+  const [withPresence, setWithPresence] = useState(true);
   
   useEffect(() => {
     const promise = getPersonalInformations(token);
@@ -28,7 +31,7 @@ export default function Payment() {
   return(
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography> 
-      {!haveInfos ? 
+      {haveInfos ? 
         <ContainerEmptyInfo>
           <EmptyInfoText>
             Você precisa completar sua inscrição antes <br/>
@@ -36,8 +39,13 @@ export default function Payment() {
           </EmptyInfoText>
         </ContainerEmptyInfo>
         :
-        <Modality/>
+        <TicketModality isActive={isActive} withPresence={withPresence}/>
       } 
+      {withPresence ?
+        <HostingModality isActive={isActive}/>
+        :
+        ''
+      }
     </>
   ); 
 }

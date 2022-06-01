@@ -1,8 +1,13 @@
 import styled from 'styled-components';
 
-const Container = styled.div`
+const ContainerOptions = styled.div`
   display: flex;
   align-items: center;
+`;
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const InfoText = styled.span`
@@ -11,19 +16,20 @@ const InfoText = styled.span`
   font-weight: 400;
   font-size: 20px;
   line-height: 23px;
-  text-align: center;
 
   color: #8E8E8E;
+
+  margin-top: 50px;
 `;
 
 const Option = styled.button`
   width: 145px;
   height: 145px;
 
-  background-color: #ffffff;
+  background-color: ${({ isActive }) => isActive ? '#FFEED2' : '#ffffff'};
 
   border-radius: 20px;
-  border: 1px solid #CECECE;
+  border: ${({ isActive }) => isActive ? 'none' : '1px solid #CECECE'};
 
   margin-top: 20px;
 
@@ -59,6 +65,7 @@ const Option = styled.button`
 
 export {
   Container,
+  ContainerOptions,
   Option,
   InfoText,
 };
