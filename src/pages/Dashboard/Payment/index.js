@@ -8,12 +8,24 @@ import { ContainerEmptyInfo, EmptyInfoText } from './style';
 
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import useToken from '../../../hooks/useToken';
+import { getEventInfo } from '../../../services/eventApi';
 
 export default function Payment() {
   const token = useToken();
   const [haveInfos, setHaveInfos] = useState();
-  const [isActive, setIsActive] = useState(true);
-  const [withPresence, setWithPresence] = useState(true);
+  const [eventInfos, setEventInfos] = useState();
+  /* const [isPresentialActive, setIsPresentialActive] = useState(false);
+  const [isOnlineActive, setIsOnlineActive] = useState(false); */
+  const [formData, setFormData] = useState({
+    eventId: '',
+    enrollmentId: '',
+    isOnline: '',
+    withAccommodation: '',
+    totalPrice: ''
+  });
+  const [ selectedData, setSelectedData ] = useState({ isPresential: false, isOnline: false });
+  const [ activedData, setActivedData ] = useState({ isPresentialActived: false, isOnlineActived: false });
+  const [ withPresence, setWithPresence ] = useState(false);
   
   useEffect(() => {
     const promise = getPersonalInformations(token);
@@ -26,7 +38,17 @@ export default function Payment() {
           setHaveInfos(false);
         }
       });
-  });
+    const promiseEvent = getEventInfo();
+    promiseEvent
+      .then((response) => {
+        setEventInfos(response);
+      })
+      .catch((error) => {
+          
+      });
+  }, []);
+
+  console.log(formData);
 
   return(
     <>
@@ -39,12 +61,30 @@ export default function Payment() {
           </EmptyInfoText>
         </ContainerEmptyInfo>
         :
-        <TicketModality isActive={isActive} withPresence={withPresence}/>
+        <TicketModality 
+          activedData={activedData} 
+          setActivedData={setActivedData} 
+          selectedData={selectedData} 
+          setSelectedData={setSelectedData} 
+          setWithPresence={setWithPresence}
+          setFormData={setFormData}
+          formData={formData}
+          eventInfos={eventInfos}
+        />
       } 
       {withPresence ?
-        <HostingModality isActive={isActive}/>
+        <HostingModality 
+          activedData={activedData}
+          setActivedData={setActivedData}
+          selectedData={selectedData}
+          setSelectedData={setSelectedData}
+          setWithPresence={setWithPresence}
+          setFormData={setFormData}
+          formData={formData}
+          eventInfos={eventInfos}
+          /* isActive={isPresentialActive} *//>
         :
-        ''
+        <p>ALo alo</p>
       }
     </>
   ); 
