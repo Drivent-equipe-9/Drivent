@@ -3,6 +3,7 @@ import { useEffect } from 'react';
 
 import { TicketModality } from './ticketModality/ticketModality';
 import { HostingModality } from './hostingModality/hostingModality';
+import { ConfirmationPresential } from './confirmation/confirmationPresential';
 import { StyledTypography } from '../../../components/PersonalInformationForm';
 import { ContainerEmptyInfo, EmptyInfoText } from './style';
 
@@ -14,8 +15,6 @@ export default function Payment() {
   const token = useToken();
   const [haveInfos, setHaveInfos] = useState();
   const [eventInfos, setEventInfos] = useState();
-  /* const [isPresentialActive, setIsPresentialActive] = useState(false);
-  const [isOnlineActive, setIsOnlineActive] = useState(false); */
   const [formData, setFormData] = useState({
     eventId: '',
     enrollmentId: '',
@@ -23,9 +22,14 @@ export default function Payment() {
     withAccommodation: '',
     totalPrice: ''
   });
-  const [ selectedData, setSelectedData ] = useState({ isPresential: false, isOnline: false });
-  const [ activedData, setActivedData ] = useState({ isPresentialActived: false, isOnlineActived: false });
+  const [ selectedTicketModality, setSelectedTicketModality ] = useState({ isPresential: false, isOnline: false });
+  const [ activedTicketModality, setActivedTicketModality ] = useState({ isPresentialActived: false, isOnlineActived: false });
+
+  const [ selectedHostingModality, setSelectedHostingModality ] = useState({ isPresential: false, isOnline: false });
+  const [ activedHostingModality, setActivedHostingModality ] = useState({ isActived: false });
+  
   const [ withPresence, setWithPresence ] = useState(false);
+  const [withHotel, setWithHotel] = useState(false);
   
   useEffect(() => {
     const promise = getPersonalInformations(token);
@@ -48,8 +52,6 @@ export default function Payment() {
       });
   }, []);
 
-  console.log(formData);
-
   return(
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography> 
@@ -62,10 +64,10 @@ export default function Payment() {
         </ContainerEmptyInfo>
         :
         <TicketModality 
-          activedData={activedData} 
-          setActivedData={setActivedData} 
-          selectedData={selectedData} 
-          setSelectedData={setSelectedData} 
+          activedTicketModality={activedTicketModality} 
+          setActivedTicketModality={setActivedTicketModality} 
+          selectedTicketModality={selectedTicketModality} 
+          setSelectedTicketModality={setSelectedTicketModality} 
           setWithPresence={setWithPresence}
           setFormData={setFormData}
           formData={formData}
@@ -74,17 +76,26 @@ export default function Payment() {
       } 
       {withPresence ?
         <HostingModality 
-          activedData={activedData}
-          setActivedData={setActivedData}
-          selectedData={selectedData}
-          setSelectedData={setSelectedData}
-          setWithPresence={setWithPresence}
+          activedHostingModality={activedHostingModality}
+          setActivedHostingModality={setActivedHostingModality}
+          selectedHostingModality={selectedHostingModality}
+          setSelectedHostingModality={setSelectedHostingModality}
           setFormData={setFormData}
           formData={formData}
           eventInfos={eventInfos}
-          /* isActive={isPresentialActive} *//>
+          setWithHotel={setWithHotel}
+        />
         :
-        <p>ALo alo</p>
+        ''
+      }
+      {withHotel ? 
+        <ConfirmationPresential 
+          setFormData={setFormData}
+          formData={formData}
+          eventInfos={eventInfos}
+        />
+        :
+        ''
       }
     </>
   ); 
