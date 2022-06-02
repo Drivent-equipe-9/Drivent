@@ -1,18 +1,23 @@
-import { useState } from 'react';
 import { Container, InfoText, Option } from './style';
 
-export function TicketModality({ formData, activedData, setActivedData, selectedData, setSelectedData, setWithPresence, setFormData, eventInfos }) {
+export function TicketModality({ formData, activedTicketModality, setActivedTicketModality, selectedTicketModality, setSelectedTicketModality, setWithPresence, setFormData, eventInfos, setOnlineTicket, setNoHotel, setWithHotel }) {
   function handlePresentialChange() {
-    setSelectedData({ isPresential: true, isOnline: false });
-    setActivedData({ isPresentialActived: true, isOnlineActived: false });
+    setSelectedTicketModality({ isPresential: true, isOnline: false });
+    setActivedTicketModality({ isPresentialActived: true, isOnlineActived: false });
     setWithPresence(true);
+    setOnlineTicket(false);
+    setWithHotel(false);
+    setNoHotel(false);
     setFormData({ ...formData, isOnline: false, totalPrice: eventInfos.presentialPrice });
   }
 
   function handleOnlineChange() {
-    setSelectedData({ isPresential: false, isOnline: true });
-    setActivedData({ isPresentialActived: false, isOnlineActived: true });
+    setSelectedTicketModality({ isPresential: false, isOnline: true });
+    setActivedTicketModality({ isPresentialActived: false, isOnlineActived: true });
+    setOnlineTicket(true);
     setWithPresence(false);
+    setWithHotel(false);
+    setNoHotel(false);
     setFormData({ ...formData, isOnline: true, totalPrice: eventInfos.onlinePrice });
   }
 
@@ -23,12 +28,12 @@ export function TicketModality({ formData, activedData, setActivedData, selected
       </InfoText>
       
       <Container>
-        <Option activedData={activedData.isPresentialActived} selectedData={selectedData} onClick={handlePresentialChange}>
+        <Option activedTicketModality={activedTicketModality.isPresentialActived} selectedTicketModality={selectedTicketModality} onClick={handlePresentialChange}>
           <p>Presencial</p>
           <span>R$ 250</span>
         </Option>
 
-        <Option activedData={activedData.isOnlineActived} selectedData={selectedData} onClick={handleOnlineChange}>
+        <Option activedTicketModality={activedTicketModality.isOnlineActived} selectedTicketModality={selectedTicketModality} onClick={handleOnlineChange}>
           <p>Online</p>
           <span>R$ 100</span>
         </Option>

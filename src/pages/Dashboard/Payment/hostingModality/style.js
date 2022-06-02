@@ -26,10 +26,10 @@ const Option = styled.button`
   width: 145px;
   height: 145px;
 
-  background-color: ${({ isActive }) => isActive ? '#FFEED2' : '#ffffff'};
+  background-color: ${({ activedHostingModality }) => activedHostingModality ? '#FFEED2' : '#ffffff'};
 
   border-radius: 20px;
-  border: ${({ isActive }) => isActive ? 'none' : '1px solid #CECECE'};
+  border: ${({ activedHostingModality }) => activedHostingModality ? 'none' : '1px solid #CECECE'};
 
   margin-top: 20px;
 

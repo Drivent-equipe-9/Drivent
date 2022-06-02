@@ -1,17 +1,19 @@
 import { Container, ContainerOptions, InfoText, Option } from './style';
 
-export function HostingModality({ activedData, setActivedData, selectedData, setSelectedData, setWithPresence, setFormData, formData, eventInfos }) {
+export function HostingModality({ activedHostingModality, setActivedHostingModality, selectedHostingModality, setSelectedHostingModality, setWithPresence, setFormData, formData, eventInfos, setWithHotel, setNoHotel }) {
   function handleWithHotelChange() {
-    setSelectedData({ isPresential: true, isOnline: false });
-    setActivedData({ isPresentialActived: true, isOnlineActived: false });
-    setWithPresence(true);
+    setSelectedHostingModality({ isPresential: true, isOnline: false });
+    setActivedHostingModality({ withHotel: true, noHotel: false });
+    setWithHotel(true);
+    setNoHotel(false);
     setFormData({ ...formData, withAccommodation: true, totalPrice: eventInfos.presentialPrice + eventInfos.accommodationPrice });
   }
 
   function handleNotHotelChange() {
-    setSelectedData({ isPresential: false, isOnline: true });
-    setActivedData({ isPresentialActived: false, isOnlineActived: true });
-    setWithPresence(false);
+    setSelectedHostingModality({ isPresential: false, isOnline: true });
+    setActivedHostingModality({ withHotel: false, noHotel: true });
+    setWithHotel(false);
+    setNoHotel(true);
     setFormData({ ...formData, withAccommodation: false, totalPrice: eventInfos.presentialPrice });
   }
   
@@ -22,12 +24,12 @@ export function HostingModality({ activedData, setActivedData, selectedData, set
       </InfoText>
       
       <ContainerOptions>
-        <Option activedData={activedData.isPresentialActived} selectedData={selectedData} onClick={handleNotHotelChange}>
+        <Option activedHostingModality={activedHostingModality.noHotel} selectedHostingModality={selectedHostingModality} onClick={handleNotHotelChange}>
           <p>Sem Hotel</p>
           <span>+ R$ 0</span>
         </Option>
 
-        <Option activedData={activedData.isPresentialActived} selectedData={selectedData} onClick={handleWithHotelChange}>
+        <Option activedHostingModality={activedHostingModality.withHotel} selectedHostingModality={selectedHostingModality} onClick={handleWithHotelChange}>
           <p>Com Hotel</p>
           <span>+ R$ 350</span>
         </Option>

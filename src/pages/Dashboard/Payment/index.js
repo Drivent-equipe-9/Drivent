@@ -3,6 +3,9 @@ import { useEffect } from 'react';
 
 import { TicketModality } from './ticketModality/ticketModality';
 import { HostingModality } from './hostingModality/hostingModality';
+import { ConfirmationWithHotel } from './confirmation/confirmationWithHotel';
+import { ConfirmationNoHotel } from './confirmation/confirmationNoHotel';
+import { ConfirmationOnline } from './confirmation/confirmationOnline';
 import { StyledTypography } from '../../../components/PersonalInformationForm';
 import { ContainerEmptyInfo, EmptyInfoText } from './style';
 
@@ -14,23 +17,29 @@ export default function Payment() {
   const token = useToken();
   const [haveInfos, setHaveInfos] = useState();
   const [eventInfos, setEventInfos] = useState();
-  /* const [isPresentialActive, setIsPresentialActive] = useState(false);
-  const [isOnlineActive, setIsOnlineActive] = useState(false); */
   const [formData, setFormData] = useState({
     eventId: '',
     enrollmentId: '',
     isOnline: '',
-    withAccommodation: '',
+    withAccommodation: false,
     totalPrice: ''
   });
-  const [ selectedData, setSelectedData ] = useState({ isPresential: false, isOnline: false });
-  const [ activedData, setActivedData ] = useState({ isPresentialActived: false, isOnlineActived: false });
+  
+  const [ selectedTicketModality, setSelectedTicketModality ] = useState({ isPresential: false, isOnline: false });
+  const [ activedTicketModality, setActivedTicketModality ] = useState({ isPresentialActived: false, isOnlineActived: false });
+
+  const [ selectedHostingModality, setSelectedHostingModality ] = useState({ isPresential: false, isOnline: false });
+  const [ activedHostingModality, setActivedHostingModality ] = useState({ withHotel: false, noHotel: false });
+  
   const [ withPresence, setWithPresence ] = useState(false);
+  const [ onlineTicket, setOnlineTicket ] = useState(false);
+  const [ withHotel, setWithHotel ] = useState(false);
+  const [ noHotel, setNoHotel ] = useState(false);
   
   useEffect(() => {
     const promise = getPersonalInformations(token);
     promise
-      .then((response) => {
+      .then(() => {
         setHaveInfos(true);
       })
       .catch((error) => {
@@ -48,12 +57,10 @@ export default function Payment() {
       });
   }, []);
 
-  console.log(formData);
-
   return(
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography> 
-      {haveInfos ? 
+      {!haveInfos ? 
         <ContainerEmptyInfo>
           <EmptyInfoText>
             Você precisa completar sua inscrição antes <br/>
@@ -62,29 +69,60 @@ export default function Payment() {
         </ContainerEmptyInfo>
         :
         <TicketModality 
-          activedData={activedData} 
-          setActivedData={setActivedData} 
-          selectedData={selectedData} 
-          setSelectedData={setSelectedData} 
+          activedTicketModality={activedTicketModality} 
+          setActivedTicketModality={setActivedTicketModality} 
+          selectedTicketModality={selectedTicketModality} 
+          setSelectedTicketModality={setSelectedTicketModality} 
           setWithPresence={setWithPresence}
+          setOnlineTicket={setOnlineTicket}
+          setFormData={setFormData}
+          formData={formData}
+          eventInfos={eventInfos}
+          setWithHotel={setWithHotel}
+          setNoHotel={setNoHotel}
+        />
+      }
+      {onlineTicket ?
+        <ConfirmationOnline 
+          setOnlineTicket={setOnlineTicket} 
+          eventInfos={eventInfos}
+          formData={formData}
+        />
+        :
+        ''
+      }
+      {withPresence ?
+        <HostingModality 
+          activedHostingModality={activedHostingModality}
+          setActivedHostingModality={setActivedHostingModality}
+          selectedHostingModality={selectedHostingModality}
+          setSelectedHostingModality={setSelectedHostingModality}
+          setFormData={setFormData}
+          formData={formData}
+          eventInfos={eventInfos}
+          setWithHotel={setWithHotel}
+          setNoHotel={setNoHotel}
+        />
+        :
+        ''
+      }
+      {withHotel ? 
+        <ConfirmationWithHotel 
           setFormData={setFormData}
           formData={formData}
           eventInfos={eventInfos}
         />
-      } 
-      {withPresence ?
-        <HostingModality 
-          activedData={activedData}
-          setActivedData={setActivedData}
-          selectedData={selectedData}
-          setSelectedData={setSelectedData}
-          setWithPresence={setWithPresence}
+        :
+        ''
+      }
+      {noHotel ?
+        <ConfirmationNoHotel
           setFormData={setFormData}
           formData={formData}
           eventInfos={eventInfos}
-          /* isActive={isPresentialActive} *//>
+        />
         :
-        <p>ALo alo</p>
+        ''
       }
     </>
   ); 
