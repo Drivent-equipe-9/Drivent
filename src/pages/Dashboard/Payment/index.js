@@ -3,7 +3,9 @@ import { useEffect } from 'react';
 
 import { TicketModality } from './ticketModality/ticketModality';
 import { HostingModality } from './hostingModality/hostingModality';
-import { ConfirmationPresential } from './confirmation/confirmationPresential';
+import { ConfirmationWithHotel } from './confirmation/confirmationWithHotel';
+import { ConfirmationNoHotel } from './confirmation/confirmationNoHotel';
+import { ConfirmationOnline } from './confirmation/confirmationOnline';
 import { StyledTypography } from '../../../components/PersonalInformationForm';
 import { ContainerEmptyInfo, EmptyInfoText } from './style';
 
@@ -29,7 +31,9 @@ export default function Payment() {
   const [ activedHostingModality, setActivedHostingModality ] = useState({ isActived: false });
   
   const [ withPresence, setWithPresence ] = useState(false);
-  const [withHotel, setWithHotel] = useState(false);
+  const [ onlineTicket, setOnlineTicket ] = useState(false);
+  const [ withHotel, setWithHotel ] = useState(false);
+  const [ noHotel, setNoHotel ] = useState(false);
   
   useEffect(() => {
     const promise = getPersonalInformations(token);
@@ -69,11 +73,22 @@ export default function Payment() {
           selectedTicketModality={selectedTicketModality} 
           setSelectedTicketModality={setSelectedTicketModality} 
           setWithPresence={setWithPresence}
+          setOnlineTicket={setOnlineTicket}
           setFormData={setFormData}
           formData={formData}
           eventInfos={eventInfos}
+          setWithHotel={setWithHotel}
+          setNoHotel={setNoHotel}
         />
-      } 
+      }
+      {onlineTicket ?
+        <ConfirmationOnline 
+          setOnlineTicket={setOnlineTicket} 
+          eventInfos={eventInfos}
+        />
+        :
+        ''
+      }
       {withPresence ?
         <HostingModality 
           activedHostingModality={activedHostingModality}
@@ -84,12 +99,22 @@ export default function Payment() {
           formData={formData}
           eventInfos={eventInfos}
           setWithHotel={setWithHotel}
+          setNoHotel={setNoHotel}
         />
         :
         ''
       }
       {withHotel ? 
-        <ConfirmationPresential 
+        <ConfirmationWithHotel 
+          setFormData={setFormData}
+          formData={formData}
+          eventInfos={eventInfos}
+        />
+        :
+        ''
+      }
+      {noHotel ?
+        <ConfirmationNoHotel
           setFormData={setFormData}
           formData={formData}
           eventInfos={eventInfos}

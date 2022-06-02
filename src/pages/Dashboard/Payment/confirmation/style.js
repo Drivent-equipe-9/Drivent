@@ -14,7 +14,7 @@ const InfoText = styled.span`
   font-size: 20px;
   line-height: 23px;
 
-  margin-bottom: 15px;
+  margin-bottom: 12px;
 
   color: #8E8E8E;
 `;

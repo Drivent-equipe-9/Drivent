@@ -1,17 +1,23 @@
 import { Container, InfoText, Option } from './style';
 
-export function TicketModality({ formData, activedTicketModality, setActivedTicketModality, selectedTicketModality, setSelectedTicketModality, setWithPresence, setFormData, eventInfos }) {
+export function TicketModality({ formData, activedTicketModality, setActivedTicketModality, selectedTicketModality, setSelectedTicketModality, setWithPresence, setFormData, eventInfos, setOnlineTicket, setNoHotel, setWithHotel }) {
   function handlePresentialChange() {
     setSelectedTicketModality({ isPresential: true, isOnline: false });
     setActivedTicketModality({ isPresentialActived: true, isOnlineActived: false });
     setWithPresence(true);
+    setOnlineTicket(false);
+    setWithHotel(false);
+    setNoHotel(false);
     setFormData({ ...formData, isOnline: false, totalPrice: eventInfos.presentialPrice });
   }
 
   function handleOnlineChange() {
     setSelectedTicketModality({ isPresential: false, isOnline: true });
     setActivedTicketModality({ isPresentialActived: false, isOnlineActived: true });
+    setOnlineTicket(true);
     setWithPresence(false);
+    setWithHotel(false);
+    setNoHotel(false);
     setFormData({ ...formData, isOnline: true, totalPrice: eventInfos.onlinePrice });
   }
 

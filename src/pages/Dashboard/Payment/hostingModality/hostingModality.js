@@ -1,11 +1,11 @@
 import { Container, ContainerOptions, InfoText, Option } from './style';
 
-export function HostingModality({ activedHostingModality, setActivedHostingModality, selectedHostingModality, setSelectedHostingModality, setWithPresence, setFormData, formData, eventInfos, setWithHotel }) {
+export function HostingModality({ activedHostingModality, setActivedHostingModality, selectedHostingModality, setSelectedHostingModality, setWithPresence, setFormData, formData, eventInfos, setWithHotel, setNoHotel }) {
   function handleWithHotelChange() {
     setSelectedHostingModality({ isPresential: true, isOnline: false });
     setActivedHostingModality({ isActived: true });
-    //setWithPresence(true);
     setWithHotel(true);
+    setNoHotel(false);
     setFormData({ ...formData, withAccommodation: 'comHotel', totalPrice: eventInfos.presentialPrice + eventInfos.accommodationPrice });
     console.log(formData);
   }
@@ -13,8 +13,8 @@ export function HostingModality({ activedHostingModality, setActivedHostingModal
   function handleNotHotelChange() {
     setSelectedHostingModality({ isPresential: false, isOnline: true });
     setActivedHostingModality({ isActived: false });
-    //setWithPresence(false);
     setWithHotel(false);
+    setNoHotel(true);
     setFormData({ ...formData, withAccommodation: 'semHotel', totalPrice: eventInfos.presentialPrice });
   }
   
