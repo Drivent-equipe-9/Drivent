@@ -7,6 +7,10 @@ const ContainerEmptyInfo = styled.div`
 
 `;
 
+const Container = styled.div`
+  display: ${({ confirmedTicket }) => confirmedTicket ? 'none' : 'inherit'};
+`;
+
 const EmptyInfoText = styled.span`
 
   margin-top: 25%;
@@ -24,5 +28,6 @@ const EmptyInfoText = styled.span`
 
 export {
   ContainerEmptyInfo,
+  Container,
   EmptyInfoText
 };
