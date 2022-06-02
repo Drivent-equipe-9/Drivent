@@ -5,11 +5,15 @@ import { toast } from 'react-toastify';
 
 import { TicketModality } from './ticketModality/ticketModality';
 import { HostingModality } from './hostingModality/hostingModality';
+
 import { ConfirmationWithHotel } from './confirmation/confirmationWithHotel';
 import { ConfirmationNoHotel } from './confirmation/confirmationNoHotel';
 import { ConfirmationOnline } from './confirmation/confirmationOnline';
+
+import { TicketSummary } from './ticketSummary/ticketSummary';
+
 import { StyledTypography } from '../../../components/PersonalInformationForm';
-import { ContainerEmptyInfo, EmptyInfoText } from './style';
+import { ContainerEmptyInfo, EmptyInfoText, Container } from './style';
 
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import useToken from '../../../hooks/useToken';
@@ -37,6 +41,7 @@ export default function Payment() {
   const [ onlineTicket, setOnlineTicket ] = useState(false);
   const [ withHotel, setWithHotel ] = useState(false);
   const [ noHotel, setNoHotel ] = useState(false);
+  const [ confirmedTicket, setConfirmedTicket] = useState(false);
   
   useEffect(() => {
     const promise = getPersonalInformations(token);
@@ -64,70 +69,82 @@ export default function Payment() {
   return(
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography> 
-      {!haveInfos ? 
-        <ContainerEmptyInfo>
-          <EmptyInfoText>
-            Você precisa completar sua inscrição antes <br/>
-            de prosseguir pra escolha de ingresso
-          </EmptyInfoText>
-        </ContainerEmptyInfo>
-        :
-        <TicketModality 
-          activedTicketModality={activedTicketModality} 
-          setActivedTicketModality={setActivedTicketModality} 
-          selectedTicketModality={selectedTicketModality} 
-          setSelectedTicketModality={setSelectedTicketModality} 
-          setWithPresence={setWithPresence}
-          setOnlineTicket={setOnlineTicket}
-          setFormData={setFormData}
-          formData={formData}
-          eventInfos={eventInfos}
-          setWithHotel={setWithHotel}
-          setNoHotel={setNoHotel}
-        />
-      }
-      {onlineTicket ?
-        <ConfirmationOnline 
-          setOnlineTicket={setOnlineTicket} 
-          eventInfos={eventInfos}
-          formData={formData}
-        />
-        :
-        ''
-      }
-      {withPresence ?
-        <HostingModality 
-          activedHostingModality={activedHostingModality}
-          setActivedHostingModality={setActivedHostingModality}
-          selectedHostingModality={selectedHostingModality}
-          setSelectedHostingModality={setSelectedHostingModality}
-          setFormData={setFormData}
-          formData={formData}
-          eventInfos={eventInfos}
-          setWithHotel={setWithHotel}
-          setNoHotel={setNoHotel}
-        />
-        :
-        ''
-      }
-      {withHotel ? 
-        <ConfirmationWithHotel 
-          setFormData={setFormData}
-          formData={formData}
-          eventInfos={eventInfos}
-        />
-        :
-        ''
-      }
-      {noHotel ?
-        <ConfirmationNoHotel
-          setFormData={setFormData}
-          formData={formData}
-          eventInfos={eventInfos}
-        />
-        :
-        ''
-      }
+      <Container confirmedTicket={confirmedTicket}>
+        {!haveInfos ? 
+          <ContainerEmptyInfo>
+            <EmptyInfoText>
+              Você precisa completar sua inscrição antes <br/>
+              de prosseguir pra escolha de ingresso
+            </EmptyInfoText>
+          </ContainerEmptyInfo>
+          :
+          <TicketModality 
+            activedTicketModality={activedTicketModality} 
+            setActivedTicketModality={setActivedTicketModality} 
+            selectedTicketModality={selectedTicketModality} 
+            setSelectedTicketModality={setSelectedTicketModality} 
+            setWithPresence={setWithPresence}
+            setOnlineTicket={setOnlineTicket}
+            setFormData={setFormData}
+            formData={formData}
+            eventInfos={eventInfos}
+            setWithHotel={setWithHotel}
+            setNoHotel={setNoHotel}
+          />
+        }
+        {onlineTicket ?
+          <ConfirmationOnline 
+            setOnlineTicket={setOnlineTicket} 
+            eventInfos={eventInfos}
+            formData={formData}
+            setConfirmedTicket={setConfirmedTicket}
+          />
+          :
+          ''
+        }
+        {withPresence ?
+          <HostingModality 
+            activedHostingModality={activedHostingModality}
+            setActivedHostingModality={setActivedHostingModality}
+            selectedHostingModality={selectedHostingModality}
+            setSelectedHostingModality={setSelectedHostingModality}
+            setFormData={setFormData}
+            formData={formData}
+            eventInfos={eventInfos}
+            setWithHotel={setWithHotel}
+            setNoHotel={setNoHotel}
+          />
+          :
+          ''
+        }
+        {withHotel ? 
+          <ConfirmationWithHotel 
+            setFormData={setFormData}
+            formData={formData}
+            eventInfos={eventInfos}
+            setConfirmedTicket={setConfirmedTicket}
+          />
+          :
+          ''
+        }
+        {noHotel ?
+          <ConfirmationNoHotel
+            setFormData={setFormData}
+            formData={formData}
+            eventInfos={eventInfos}
+            setConfirmedTicket={setConfirmedTicket}
+          />
+          :
+          ''
+        }
+      </Container>
+      <>
+        {confirmedTicket ?
+          <TicketSummary formData={formData}/>
+          :
+          ''
+        }
+      </>
     </>
   ); 
 }

@@ -3,7 +3,7 @@ import useToken from '../../../../hooks/useToken';
 import { saveTicket } from '../../../../services/ticketApi';
 import { Container, InfoText, Option } from './style';
 
-export function ConfirmationNoHotel({ formData, eventInfos }) {
+export function ConfirmationNoHotel({ formData, eventInfos, setConfirmedTicket }) {
   const token = useToken();
 
   function submit() {
@@ -11,8 +11,11 @@ export function ConfirmationNoHotel({ formData, eventInfos }) {
     promise
       .then(() => {
         toast('Ticket reservado com sucesso!');
+        setConfirmedTicket(true);
       })
       .catch((error) => {
+        setConfirmedTicket(false);
+
         if (error.response.status === 409) {
           toast('Você já possui um ticket.');
           return;
