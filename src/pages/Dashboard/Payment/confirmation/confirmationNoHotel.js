@@ -1,16 +1,14 @@
 import { Container, InfoText, Option } from './style';
 
-export function ConfirmationNoHotel({ formData, setFormData, eventInfos }) {
+export function ConfirmationNoHotel({ formData, eventInfos }) {
   function submit() {
-    setFormData({ ...formData, withAccommodation: 'comHotel', totalPrice: eventInfos.presentialPrice });
     console.log(formData);
   }
-  console.log(formData);
 
   return (
     <Container>
       <InfoText>
-        {`Fechado! O total ficou em R$ ${eventInfos.presentialPrice}. Agora é só confirmar:(sem hotel)`}
+        {`Fechado! O total ficou em R$ ${eventInfos.presentialPrice}. Agora é só confirmar:`}
       </InfoText>
       
       <Option formData={formData} onClick={submit}>

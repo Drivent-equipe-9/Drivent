@@ -1,11 +1,9 @@
 import { Container, InfoText, Option } from './style';
 
-export function ConfirmationWithHotel({ formData, setFormData, eventInfos }) {
+export function ConfirmationWithHotel({ formData }) {
   function submit() {
-    setFormData({ ...formData, withAccommodation: 'comHotel', totalPrice: eventInfos.presentialPrice + eventInfos.accommodationPrice });
     console.log(formData);
   }
-  console.log(formData);
 
   return (
     <Container>

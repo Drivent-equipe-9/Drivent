@@ -1,8 +1,7 @@
 import { Container, InfoText, Option } from './style';
 
-export function ConfirmationOnline({ formData, setFormData, eventInfos, }) {
+export function ConfirmationOnline({ formData, eventInfos, }) {
   function submit() {
-    setFormData({ ...formData, withAccommodation: 'comHotel', totalPrice: eventInfos.onlinePrice });
     console.log(formData);
   }
 
