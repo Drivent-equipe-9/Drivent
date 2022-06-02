@@ -21,14 +21,15 @@ export default function Payment() {
     eventId: '',
     enrollmentId: '',
     isOnline: '',
-    withAccommodation: '',
+    withAccommodation: false,
     totalPrice: ''
   });
+  
   const [ selectedTicketModality, setSelectedTicketModality ] = useState({ isPresential: false, isOnline: false });
   const [ activedTicketModality, setActivedTicketModality ] = useState({ isPresentialActived: false, isOnlineActived: false });
 
   const [ selectedHostingModality, setSelectedHostingModality ] = useState({ isPresential: false, isOnline: false });
-  const [ activedHostingModality, setActivedHostingModality ] = useState({ isActived: false });
+  const [ activedHostingModality, setActivedHostingModality ] = useState({ withHotel: false, noHotel: false });
   
   const [ withPresence, setWithPresence ] = useState(false);
   const [ onlineTicket, setOnlineTicket ] = useState(false);
@@ -38,7 +39,7 @@ export default function Payment() {
   useEffect(() => {
     const promise = getPersonalInformations(token);
     promise
-      .then((response) => {
+      .then(() => {
         setHaveInfos(true);
       })
       .catch((error) => {
@@ -59,7 +60,7 @@ export default function Payment() {
   return(
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography> 
-      {haveInfos ? 
+      {!haveInfos ? 
         <ContainerEmptyInfo>
           <EmptyInfoText>
             Você precisa completar sua inscrição antes <br/>
@@ -85,6 +86,7 @@ export default function Payment() {
         <ConfirmationOnline 
           setOnlineTicket={setOnlineTicket} 
           eventInfos={eventInfos}
+          formData={formData}
         />
         :
         ''
