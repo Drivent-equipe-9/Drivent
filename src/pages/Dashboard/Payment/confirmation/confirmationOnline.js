@@ -1,8 +1,24 @@
+import { toast } from 'react-toastify';
+import useToken from '../../../../hooks/useToken';
+import { saveTicket } from '../../../../services/ticketApi';
 import { Container, InfoText, Option } from './style';
 
 export function ConfirmationOnline({ formData, eventInfos, }) {
+  const token = useToken();
+
   function submit() {
-    console.log(formData);
+    const promise = saveTicket(token, formData);
+    promise
+      .then(() => {
+        toast('Ticket reservado com sucesso!');
+      })
+      .catch((error) => {
+        if (error.response.status === 409) {
+          toast('Você já possui um ticket.');
+          return;
+        }
+        toast('Algo deu errado, tente novamente.');
+      });
   }
 
   return (
