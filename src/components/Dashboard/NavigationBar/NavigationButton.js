@@ -35,6 +35,15 @@ const Button = styled.button`
   }
 
   @media (max-width: 600px) {
+    min-width: 20%;
     height: 80px;
+    
+    & > *:first-child {
+      font-size: 6vw;
+    }
+
+    & > *:nth-child(2) {
+      font-size: calc((3 - 2) * 1vw + 0.6em);
+    }
   }
 `;
