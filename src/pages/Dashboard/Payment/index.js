@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { useEffect } from 'react';
 
+import { toast } from 'react-toastify';
+
 import { TicketModality } from './ticketModality/ticketModality';
 import { HostingModality } from './hostingModality/hostingModality';
 import { ConfirmationWithHotel } from './confirmation/confirmationWithHotel';
@@ -39,21 +41,23 @@ export default function Payment() {
   useEffect(() => {
     const promise = getPersonalInformations(token);
     promise
-      .then(() => {
+      .then((response) => {
         setHaveInfos(true);
+
+        const promiseEvent = getEventInfo();
+        promiseEvent
+          .then((responseEvent) => {
+            setEventInfos(responseEvent);
+            setFormData({ ...formData, eventId: responseEvent.id, enrollmentId: response.id });
+          })
+          .catch(() => {
+            toast('Não foi possível carregar as informações do evento!');
+          });
       })
       .catch((error) => {
         if(error.status === 404) {
           setHaveInfos(false);
         }
-      });
-    const promiseEvent = getEventInfo();
-    promiseEvent
-      .then((response) => {
-        setEventInfos(response);
-      })
-      .catch((error) => {
-          
       });
   }, []);
 
