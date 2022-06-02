@@ -29,28 +29,28 @@ export default function NavigationBar() {
       </Link>
 
       <Link to="/dashboard/payment">
-        <NavigationButton active={isActive('/dashboard/paymen')}>
+        <NavigationButton active={isActive('/dashboard/payment')}>
           <FaMoneyBill />
           <span>Pagamento</span>
         </NavigationButton>
       </Link>
 
       <Link to="/dashboard/hotel">
-        <NavigationButton active={isActive('/dashboard/hote')}>
+        <NavigationButton active={isActive('/dashboard/hotel')}>
           <FaBed />
           <span>Hotel</span>
         </NavigationButton>
       </Link>
 
       <Link to="/dashboard/activities">
-        <NavigationButton active={isActive('/dashboard/activitie')}>
+        <NavigationButton active={isActive('/dashboard/activities')}>
           <FaCalendarWeek />
           <span>Atividades</span>
         </NavigationButton>
       </Link>
 
       <Link to="/dashboard/certificate">
-        <NavigationButton active={isActive('/dashboard/certificat')}>
+        <NavigationButton active={isActive('/dashboard/certificate')}>
           <FaCertificate />
           <span>Certificado</span>
         </NavigationButton>
@@ -75,6 +75,7 @@ const Container = styled.div`
   @media (max-width: 600px) {
     width: 100%;
     height: 80px;
-    flex-direction: row;
+    display: grid;
+    grid-template-columns: 20% 20% 20% 20% 20% ;
   }
 `;
