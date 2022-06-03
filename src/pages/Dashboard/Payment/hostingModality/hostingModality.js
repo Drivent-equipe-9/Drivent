@@ -4,10 +4,10 @@ export function HostingModality({
   setFormData, 
   formData, 
   eventInfos, 
-  setWithHotel, 
-  setNoHotel,
   selectedData, 
-  setSelectedData
+  setSelectedData,
+  changeComponents,
+  setChangeComponents
 }) {
   function handleWithHotelChange() {
     setSelectedData( {
@@ -18,8 +18,15 @@ export function HostingModality({
       noHotelActived: false
     });
 
-    setWithHotel(true);
-    setNoHotel(false);
+    setChangeComponents({
+      ...changeComponents,
+      WithHotel: true,
+      setNoHotel: false,
+      withHotel: true,
+      noHotel: false,
+      onlineTicket: false
+    }); 
+
     setFormData({ ...formData, withAccommodation: true, totalPrice: eventInfos.presentialPrice + eventInfos.accommodationPrice });
   }
 
@@ -32,8 +39,15 @@ export function HostingModality({
       noHotelActived: true
     });
 
-    setWithHotel(false);
-    setNoHotel(true);
+    setChangeComponents({
+      ...changeComponents,
+      WithHotel: false,
+      NoHotel: false,
+      withHotel: false,
+      noHotel: true,
+      onlineTicket: false
+    });
+
     setFormData({ ...formData, withAccommodation: false, totalPrice: eventInfos.presentialPrice });
   }
   

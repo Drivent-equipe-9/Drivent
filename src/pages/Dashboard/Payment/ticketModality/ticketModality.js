@@ -1,15 +1,13 @@
 import { Container, InfoText, Option } from './style';
 
 export function TicketModality({ 
-  formData, 
-  setWithPresence, 
+  formData,
   setFormData, 
   eventInfos, 
-  setOnlineTicket, 
-  setNoHotel, 
-  setWithHotel,
   selectedData, 
-  setSelectedData
+  setSelectedData,
+  changeComponents,
+  setChangeComponents
 }) {
   function handlePresentialChange() {
     setSelectedData( {
@@ -18,12 +16,18 @@ export function TicketModality({
       isPresentialActived: true,
       isOnline: false,
       isOnlineActived: false,
+      withHotelActived: false, 
+      noHotelActived: false 
     });
 
-    setWithPresence(true);
-    setOnlineTicket(false);
-    setWithHotel(false);
-    setNoHotel(false);
+    setChangeComponents({
+      ...changeComponents,
+      withPresence: true, 
+      onlineTicket: false,
+      withHotel: false,
+      noHotel: false  
+    });
+
     setFormData({ ...formData, isOnline: false, totalPrice: eventInfos.presentialPrice });
   }
 
@@ -33,13 +37,19 @@ export function TicketModality({
       isOnline: true,
       isOnlineActived: true,
       isPresential: false,
-      isPresentialActived: false
+      isPresentialActived: false,
+      withHotelActived: false, 
+      noHotelActived: false 
     });
 
-    setOnlineTicket(true);
-    setWithPresence(false);
-    setWithHotel(false);
-    setNoHotel(false);
+    setChangeComponents({
+      ...changeComponents,
+      onlineTicket: true,
+      withPresence: false,
+      withHotel: false,
+      noHotel: false  
+    });
+    
     setFormData({ ...formData, isOnline: true, totalPrice: eventInfos.onlinePrice });
   }
 

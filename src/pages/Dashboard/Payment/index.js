@@ -7,7 +7,6 @@ import { TicketModality } from './ticketModality/ticketModality';
 import { HostingModality } from './hostingModality/hostingModality';
 
 import { ConfirmationTicket } from './confirmation/confirmationTicket';
-
 import { TicketSummary } from './ticketSummary/ticketSummary';
 
 import { StyledTypography } from '../../../components/PersonalInformationForm';
@@ -29,17 +28,20 @@ export default function Payment() {
     totalPrice: ''
   });
   
-  const [ selectedData, setSelectedData] = useState({ 
+  const [ selectedData, setSelectedData ] = useState({ 
     isPresential: false, isOnline: false, 
     isPresentialActived: false, isOnlineActived: false,  
     withHotel: false, noHotel: false,
     withHotelActived: false, noHotelActived: false 
   });
+
+  const [ changeComponents, setChangeComponents ] = useState({
+    withPresence: false,
+    onlineTicket: false,
+    withHotel: false,
+    noHotel: false,
+  });
   
-  const [ withPresence, setWithPresence ] = useState(false);
-  const [ onlineTicket, setOnlineTicket ] = useState(false);
-  const [ withHotel, setWithHotel ] = useState(false);
-  const [ noHotel, setNoHotel ] = useState(false);
   const [ confirmedTicket, setConfirmedTicket] = useState(false);
   
   useEffect(() => {
@@ -68,7 +70,7 @@ export default function Payment() {
   return(
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography> 
-      <Container confirmedTicket={confirmedTicket}>
+      <Container changeComponents={changeComponents.confirmedTicket}>
         {!haveInfos ? 
           <ContainerEmptyInfo>
             <EmptyInfoText>
@@ -80,52 +82,45 @@ export default function Payment() {
           <TicketModality 
             selectedData={selectedData}
             setSelectedData={setSelectedData}
-            setWithPresence={setWithPresence}
-            setOnlineTicket={setOnlineTicket}
             setFormData={setFormData}
             formData={formData}
             eventInfos={eventInfos}
-            setWithHotel={setWithHotel}
-            setNoHotel={setNoHotel}
+            changeComponents={changeComponents}
+            setChangeComponents={setChangeComponents}
           />
         }
-        {onlineTicket ?
+        {changeComponents.onlineTicket ?
           <ConfirmationTicket
-            eventInfos={eventInfos}
             formData={formData}
             setConfirmedTicket={setConfirmedTicket}
           />
           :
           ''
         }
-        {withPresence ?
+        {changeComponents.withPresence ?
           <HostingModality 
             selectedData={selectedData}
             setSelectedData={setSelectedData}
             setFormData={setFormData}
             formData={formData}
             eventInfos={eventInfos}
-            setWithHotel={setWithHotel}
-            setNoHotel={setNoHotel}
+            changeComponents={changeComponents}
+            setChangeComponents={setChangeComponents}
           />
           :
           ''
         }
-        {withHotel ? 
+        {changeComponents.withHotel ? 
           <ConfirmationTicket
-            setFormData={setFormData}
             formData={formData}
-            eventInfos={eventInfos}
             setConfirmedTicket={setConfirmedTicket}
           />
           :
           ''
         }
-        {noHotel ?
+        {changeComponents.noHotel ?
           <ConfirmationTicket
-            setFormData={setFormData}
             formData={formData}
-            eventInfos={eventInfos}
             setConfirmedTicket={setConfirmedTicket}
           />
           :
