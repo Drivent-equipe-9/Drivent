@@ -1,9 +1,25 @@
 import { Container, InfoText, Option } from './style';
 
-export function TicketModality({ formData, activedTicketModality, setActivedTicketModality, selectedTicketModality, setSelectedTicketModality, setWithPresence, setFormData, eventInfos, setOnlineTicket, setNoHotel, setWithHotel }) {
+export function TicketModality({ 
+  formData, 
+  setWithPresence, 
+  setFormData, 
+  eventInfos, 
+  setOnlineTicket, 
+  setNoHotel, 
+  setWithHotel,
+  selectedData, 
+  setSelectedData
+}) {
   function handlePresentialChange() {
-    setSelectedTicketModality({ isPresential: true, isOnline: false });
-    setActivedTicketModality({ isPresentialActived: true, isOnlineActived: false });
+    setSelectedData( {
+      ...selectedData,
+      isPresential: true,
+      isPresentialActived: true,
+      isOnline: false,
+      isOnlineActived: false,
+    });
+
     setWithPresence(true);
     setOnlineTicket(false);
     setWithHotel(false);
@@ -12,8 +28,14 @@ export function TicketModality({ formData, activedTicketModality, setActivedTick
   }
 
   function handleOnlineChange() {
-    setSelectedTicketModality({ isPresential: false, isOnline: true });
-    setActivedTicketModality({ isPresentialActived: false, isOnlineActived: true });
+    setSelectedData( {
+      ...selectedData,
+      isOnline: true,
+      isOnlineActived: true,
+      isPresential: false,
+      isPresentialActived: false
+    });
+
     setOnlineTicket(true);
     setWithPresence(false);
     setWithHotel(false);
@@ -28,12 +50,12 @@ export function TicketModality({ formData, activedTicketModality, setActivedTick
       </InfoText>
       
       <Container>
-        <Option activedTicketModality={activedTicketModality.isPresentialActived} selectedTicketModality={selectedTicketModality} onClick={handlePresentialChange}>
+        <Option selectedData={selectedData.isPresentialActived} onClick={handlePresentialChange}>
           <p>Presencial</p>
           <span>R$ 250</span>
         </Option>
 
-        <Option activedTicketModality={activedTicketModality.isOnlineActived} selectedTicketModality={selectedTicketModality} onClick={handleOnlineChange}>
+        <Option selectedData={selectedData.isOnlineActived} onClick={handleOnlineChange}>
           <p>Online</p>
           <span>R$ 100</span>
         </Option>
