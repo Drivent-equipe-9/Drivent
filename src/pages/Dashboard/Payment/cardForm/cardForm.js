@@ -117,11 +117,6 @@ export default class PaymentForm extends React.Component {
                                 }
                             </InputMask>
                         </ThirdLine>
-                        <SubmitContainer>
-                            <Button type="submit">
-                                Finalizar Pagamento
-                            </Button>
-                        </SubmitContainer>
                     </Form>
                 </PaymentContainer>
             </Container >

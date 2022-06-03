@@ -148,6 +148,7 @@ export default function Payment() {
           <>
             <TicketSummary formData={formData} />
             <PaymentForm disable={disable} setDisable={setDisable} />
+            <ConfirmPayment />
           </>
         }
       </>
