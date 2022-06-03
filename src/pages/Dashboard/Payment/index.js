@@ -6,10 +6,7 @@ import { toast } from 'react-toastify';
 import { TicketModality } from './ticketModality/ticketModality';
 import { HostingModality } from './hostingModality/hostingModality';
 
-import { ConfirmationWithHotel } from './confirmation/confirmationWithHotel';
-import { ConfirmationNoHotel } from './confirmation/confirmationNoHotel';
-import { ConfirmationOnline } from './confirmation/confirmationOnline';
-
+import { ConfirmationTicket } from './confirmation/confirmationTicket';
 import { TicketSummary } from './ticketSummary/ticketSummary';
 
 import { StyledTypography, SubmitContainer } from '../../../components/PersonalInformationForm';
@@ -34,19 +31,21 @@ export default function Payment() {
     totalPrice: ''
   });
 
-  const [selectedTicketModality, setSelectedTicketModality] = useState({ isPresential: false, isOnline: false });
-  const [activedTicketModality, setActivedTicketModality] = useState({ isPresentialActived: false, isOnlineActived: false });
+  const [selectedData, setSelectedData] = useState({
+    isPresential: false, isOnline: false,
+    isPresentialActived: false, isOnlineActived: false,
+    withHotel: false, noHotel: false,
+    withHotelActived: false, noHotelActived: false
+  });
 
-  const [selectedHostingModality, setSelectedHostingModality] = useState({ isPresential: false, isOnline: false });
-  const [activedHostingModality, setActivedHostingModality] = useState({ withHotel: false, noHotel: false });
+  const [changeComponents, setChangeComponents] = useState({
+    withPresence: false,
+    onlineTicket: false,
+    withHotel: false,
+    noHotel: false,
+  });
 
-  const [withPresence, setWithPresence] = useState(false);
-  const [onlineTicket, setOnlineTicket] = useState(false);
-  const [withHotel, setWithHotel] = useState(false);
-  const [noHotel, setNoHotel] = useState(false);
   const [confirmedTicket, setConfirmedTicket] = useState(false);
-
-  const [disable, setDisable] = useState(false);
 
   useEffect(() => {
     const promise = getPersonalInformations(token);
@@ -84,59 +83,47 @@ export default function Payment() {
           </ContainerEmptyInfo>
           :
           <TicketModality
-            activedTicketModality={activedTicketModality}
-            setActivedTicketModality={setActivedTicketModality}
-            selectedTicketModality={selectedTicketModality}
-            setSelectedTicketModality={setSelectedTicketModality}
-            setWithPresence={setWithPresence}
-            setOnlineTicket={setOnlineTicket}
+            selectedData={selectedData}
+            setSelectedData={setSelectedData}
             setFormData={setFormData}
             formData={formData}
             eventInfos={eventInfos}
-            setWithHotel={setWithHotel}
-            setNoHotel={setNoHotel}
+            changeComponents={changeComponents}
+            setChangeComponents={setChangeComponents}
           />
         }
-        {onlineTicket ?
-          <ConfirmationOnline
-            setOnlineTicket={setOnlineTicket}
-            eventInfos={eventInfos}
+        {changeComponents.onlineTicket ?
+          <ConfirmationTicket
             formData={formData}
             setConfirmedTicket={setConfirmedTicket}
           />
           :
           ''
         }
-        {withPresence ?
+        {changeComponents.withPresence ?
           <HostingModality
-            activedHostingModality={activedHostingModality}
-            setActivedHostingModality={setActivedHostingModality}
-            selectedHostingModality={selectedHostingModality}
-            setSelectedHostingModality={setSelectedHostingModality}
+            selectedData={selectedData}
+            setSelectedData={setSelectedData}
             setFormData={setFormData}
             formData={formData}
             eventInfos={eventInfos}
-            setWithHotel={setWithHotel}
-            setNoHotel={setNoHotel}
+            changeComponents={changeComponents}
+            setChangeComponents={setChangeComponents}
           />
           :
           ''
         }
-        {withHotel ?
-          <ConfirmationWithHotel
-            setFormData={setFormData}
+        {changeComponents.withHotel ?
+          <ConfirmationTicket
             formData={formData}
-            eventInfos={eventInfos}
             setConfirmedTicket={setConfirmedTicket}
           />
           :
           ''
         }
-        {noHotel ?
-          <ConfirmationNoHotel
-            setFormData={setFormData}
+        {changeComponents.noHotel ?
+          <ConfirmationTicket
             formData={formData}
-            eventInfos={eventInfos}
             setConfirmedTicket={setConfirmedTicket}
           />
           :
@@ -147,7 +134,7 @@ export default function Payment() {
         {confirmedTicket &&
           <>
             <TicketSummary formData={formData} />
-            <PaymentForm disable={disable} setDisable={setDisable} />
+            <PaymentForm />
             <ConfirmPayment />
           </>
         }

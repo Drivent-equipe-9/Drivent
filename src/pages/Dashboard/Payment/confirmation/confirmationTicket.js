@@ -3,7 +3,7 @@ import useToken from '../../../../hooks/useToken';
 import { saveTicket } from '../../../../services/ticketApi';
 import { Container, InfoText, Option } from './style';
 
-export function ConfirmationNoHotel({ formData, eventInfos, setConfirmedTicket }) {
+export function ConfirmationTicket({ formData, setConfirmedTicket }) {
   const token = useToken();
 
   function submit() {
@@ -14,12 +14,12 @@ export function ConfirmationNoHotel({ formData, eventInfos, setConfirmedTicket }
         setConfirmedTicket(true);
       })
       .catch((error) => {
-        setConfirmedTicket(false);
-
-        if (error.response.status === 409) {
+        setConfirmedTicket(false); 
+        
+        if(error.response.status === 409) {
           toast('Você já possui um ticket.');
           return;
-        }
+        } 
         toast('Algo deu errado, tente novamente.');
       });
   }
@@ -27,7 +27,7 @@ export function ConfirmationNoHotel({ formData, eventInfos, setConfirmedTicket }
   return (
     <Container>
       <InfoText>
-        {`Fechado! O total ficou em R$ ${eventInfos.presentialPrice}. Agora é só confirmar:`}
+        {`Fechado! O total ficou em R$ ${formData.totalPrice}. Agora é só confirmar:`}
       </InfoText>
       
       <Option formData={formData} onClick={submit}>

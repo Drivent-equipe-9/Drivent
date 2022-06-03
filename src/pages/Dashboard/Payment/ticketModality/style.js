@@ -20,10 +20,10 @@ const Option = styled.button`
   width: 145px;
   height: 145px;
 
-  background-color: ${({ activedTicketModality }) => activedTicketModality ? '#FFEED2' : '#ffffff'};
+  background-color: ${({ selectedData }) => selectedData ? '#FFEED2' : '#ffffff'};
 
   border-radius: 20px;
-  border: ${({ activedTicketModality }) => activedTicketModality ? 'none' : '1px solid #CECECE'};
+  border: ${({ selectedData }) => selectedData ? 'none' : '1px solid #CECECE'};
 
   margin-top: 20px;
 

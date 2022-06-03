@@ -1,23 +1,55 @@
 import { Container, InfoText, Option } from './style';
 
-export function TicketModality({ formData, activedTicketModality, setActivedTicketModality, selectedTicketModality, setSelectedTicketModality, setWithPresence, setFormData, eventInfos, setOnlineTicket, setNoHotel, setWithHotel }) {
+export function TicketModality({ 
+  formData,
+  setFormData, 
+  eventInfos, 
+  selectedData, 
+  setSelectedData,
+  changeComponents,
+  setChangeComponents
+}) {
   function handlePresentialChange() {
-    setSelectedTicketModality({ isPresential: true, isOnline: false });
-    setActivedTicketModality({ isPresentialActived: true, isOnlineActived: false });
-    setWithPresence(true);
-    setOnlineTicket(false);
-    setWithHotel(false);
-    setNoHotel(false);
+    setSelectedData( {
+      ...selectedData,
+      isPresential: true,
+      isPresentialActived: true,
+      isOnline: false,
+      isOnlineActived: false,
+      withHotelActived: false, 
+      noHotelActived: false 
+    });
+
+    setChangeComponents({
+      ...changeComponents,
+      withPresence: true, 
+      onlineTicket: false,
+      withHotel: false,
+      noHotel: false  
+    });
+
     setFormData({ ...formData, isOnline: false, totalPrice: eventInfos.presentialPrice });
   }
 
   function handleOnlineChange() {
-    setSelectedTicketModality({ isPresential: false, isOnline: true });
-    setActivedTicketModality({ isPresentialActived: false, isOnlineActived: true });
-    setOnlineTicket(true);
-    setWithPresence(false);
-    setWithHotel(false);
-    setNoHotel(false);
+    setSelectedData( {
+      ...selectedData,
+      isOnline: true,
+      isOnlineActived: true,
+      isPresential: false,
+      isPresentialActived: false,
+      withHotelActived: false, 
+      noHotelActived: false 
+    });
+
+    setChangeComponents({
+      ...changeComponents,
+      onlineTicket: true,
+      withPresence: false,
+      withHotel: false,
+      noHotel: false  
+    });
+    
     setFormData({ ...formData, isOnline: true, totalPrice: eventInfos.onlinePrice });
   }
 
@@ -28,12 +60,12 @@ export function TicketModality({ formData, activedTicketModality, setActivedTick
       </InfoText>
       
       <Container>
-        <Option activedTicketModality={activedTicketModality.isPresentialActived} selectedTicketModality={selectedTicketModality} onClick={handlePresentialChange}>
+        <Option selectedData={selectedData.isPresentialActived} onClick={handlePresentialChange}>
           <p>Presencial</p>
           <span>R$ 250</span>
         </Option>
 
-        <Option activedTicketModality={activedTicketModality.isOnlineActived} selectedTicketModality={selectedTicketModality} onClick={handleOnlineChange}>
+        <Option selectedData={selectedData.isOnlineActived} onClick={handleOnlineChange}>
           <p>Online</p>
           <span>R$ 100</span>
         </Option>
