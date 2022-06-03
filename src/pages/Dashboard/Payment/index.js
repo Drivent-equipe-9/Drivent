@@ -70,7 +70,7 @@ export default function Payment() {
   return(
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography> 
-      <Container changeComponents={changeComponents.confirmedTicket}>
+      <Container confirmedTicket={confirmedTicket}>
         {!haveInfos ? 
           <ContainerEmptyInfo>
             <EmptyInfoText>

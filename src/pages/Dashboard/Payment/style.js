@@ -8,7 +8,7 @@ const ContainerEmptyInfo = styled.div`
 `;
 
 const Container = styled.div`
-  display: ${({ changeComponents }) => changeComponents ? 'none' : 'inherit'};
+  display: ${({ confirmedTicket }) => confirmedTicket ? 'none' : 'inherit'};
 `;
 
 const EmptyInfoText = styled.span`

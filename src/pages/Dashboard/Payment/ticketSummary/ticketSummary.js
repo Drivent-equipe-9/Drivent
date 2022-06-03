@@ -3,14 +3,14 @@ import { Container, InfoText, Summary } from './style';
 export function TicketSummary({ formData }) {
   let ticketType = '';
 
-  if (formData.totalPrice === 600) {
+  if (formData.isOnline === false && formData.withAccommodation === true) {
     ticketType = 'Presencial + Com Hotel';
   }
-  if (formData.totalPrice === 100) {
-    ticketType = 'Online';
-  }
-  if (formData.totalPrice === 250) {
+  if (formData.isOnline === false && formData.withAccommodation === false) {
     ticketType = 'Presencial + Sem Hotel';
+  }
+  if (formData.isOnline === true) {
+    ticketType = 'Online';
   }
 
   return(
