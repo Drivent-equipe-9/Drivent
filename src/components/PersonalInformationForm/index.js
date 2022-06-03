@@ -1,3 +1,4 @@
+/* eslint-disable space-before-function-paren */
 import { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import DateFnsUtils from '@date-io/date-fns';
@@ -41,7 +42,7 @@ export default function PersonalInformationForm() {
   } = useForm({
     validations: FormValidations,
 
-    onSubmit: async(data) => {
+    onSubmit: async (data) => {
       const newData = {
         name: data.name,
         cpf: data.cpf.replaceAll('.', '').replaceAll('-', ''),
@@ -262,7 +263,7 @@ export default function PersonalInformationForm() {
               onChange={handleChange('addressDetail')}
             />
           </InputWrapper>
-          
+
           <SubmitContainer>
             <Button type="submit" disabled={dynamicInputIsLoading || saveEnrollmentLoading}>
               Salvar
@@ -278,7 +279,7 @@ export const StyledTypography = styled(Typography)`
   margin-bottom: 20px!important;
 `;
 
-const SubmitContainer = styled.div`
+export const SubmitContainer = styled.div`
   margin-top: 40px!important;
   width: 100%!important;
 

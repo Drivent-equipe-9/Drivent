@@ -15,7 +15,7 @@ const EmptyInfoText = styled.span`
 
   margin-top: 25%;
 
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 20px;

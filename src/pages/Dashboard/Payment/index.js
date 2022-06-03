@@ -12,12 +12,15 @@ import { ConfirmationOnline } from './confirmation/confirmationOnline';
 
 import { TicketSummary } from './ticketSummary/ticketSummary';
 
-import { StyledTypography } from '../../../components/PersonalInformationForm';
+import { StyledTypography, SubmitContainer } from '../../../components/PersonalInformationForm';
 import { ContainerEmptyInfo, EmptyInfoText, Container } from './style';
 
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import useToken from '../../../hooks/useToken';
 import { getEventInfo } from '../../../services/eventApi';
+import PaymentForm from './cardForm/cardForm';
+import Button from '../../../components/Form/Button';
+import { ConfirmPayment } from './confirmation/confirmPayment';
 
 export default function Payment() {
   const token = useToken();
@@ -30,19 +33,21 @@ export default function Payment() {
     withAccommodation: false,
     totalPrice: ''
   });
-  
-  const [ selectedTicketModality, setSelectedTicketModality ] = useState({ isPresential: false, isOnline: false });
-  const [ activedTicketModality, setActivedTicketModality ] = useState({ isPresentialActived: false, isOnlineActived: false });
 
-  const [ selectedHostingModality, setSelectedHostingModality ] = useState({ isPresential: false, isOnline: false });
-  const [ activedHostingModality, setActivedHostingModality ] = useState({ withHotel: false, noHotel: false });
-  
-  const [ withPresence, setWithPresence ] = useState(false);
-  const [ onlineTicket, setOnlineTicket ] = useState(false);
-  const [ withHotel, setWithHotel ] = useState(false);
-  const [ noHotel, setNoHotel ] = useState(false);
-  const [ confirmedTicket, setConfirmedTicket] = useState(false);
-  
+  const [selectedTicketModality, setSelectedTicketModality] = useState({ isPresential: false, isOnline: false });
+  const [activedTicketModality, setActivedTicketModality] = useState({ isPresentialActived: false, isOnlineActived: false });
+
+  const [selectedHostingModality, setSelectedHostingModality] = useState({ isPresential: false, isOnline: false });
+  const [activedHostingModality, setActivedHostingModality] = useState({ withHotel: false, noHotel: false });
+
+  const [withPresence, setWithPresence] = useState(false);
+  const [onlineTicket, setOnlineTicket] = useState(false);
+  const [withHotel, setWithHotel] = useState(false);
+  const [noHotel, setNoHotel] = useState(false);
+  const [confirmedTicket, setConfirmedTicket] = useState(false);
+
+  const [disable, setDisable] = useState(false);
+
   useEffect(() => {
     const promise = getPersonalInformations(token);
     promise
@@ -60,29 +65,29 @@ export default function Payment() {
           });
       })
       .catch((error) => {
-        if(error.status === 404) {
+        if (error.status === 404) {
           setHaveInfos(false);
         }
       });
   }, []);
 
-  return(
+  return (
     <>
-      <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography> 
+      <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography>
       <Container confirmedTicket={confirmedTicket}>
-        {!haveInfos ? 
+        {!haveInfos ?
           <ContainerEmptyInfo>
             <EmptyInfoText>
-              Você precisa completar sua inscrição antes <br/>
+              Você precisa completar sua inscrição antes <br />
               de prosseguir pra escolha de ingresso
             </EmptyInfoText>
           </ContainerEmptyInfo>
           :
-          <TicketModality 
-            activedTicketModality={activedTicketModality} 
-            setActivedTicketModality={setActivedTicketModality} 
-            selectedTicketModality={selectedTicketModality} 
-            setSelectedTicketModality={setSelectedTicketModality} 
+          <TicketModality
+            activedTicketModality={activedTicketModality}
+            setActivedTicketModality={setActivedTicketModality}
+            selectedTicketModality={selectedTicketModality}
+            setSelectedTicketModality={setSelectedTicketModality}
             setWithPresence={setWithPresence}
             setOnlineTicket={setOnlineTicket}
             setFormData={setFormData}
@@ -93,8 +98,8 @@ export default function Payment() {
           />
         }
         {onlineTicket ?
-          <ConfirmationOnline 
-            setOnlineTicket={setOnlineTicket} 
+          <ConfirmationOnline
+            setOnlineTicket={setOnlineTicket}
             eventInfos={eventInfos}
             formData={formData}
             setConfirmedTicket={setConfirmedTicket}
@@ -103,7 +108,7 @@ export default function Payment() {
           ''
         }
         {withPresence ?
-          <HostingModality 
+          <HostingModality
             activedHostingModality={activedHostingModality}
             setActivedHostingModality={setActivedHostingModality}
             selectedHostingModality={selectedHostingModality}
@@ -117,8 +122,8 @@ export default function Payment() {
           :
           ''
         }
-        {withHotel ? 
-          <ConfirmationWithHotel 
+        {withHotel ?
+          <ConfirmationWithHotel
             setFormData={setFormData}
             formData={formData}
             eventInfos={eventInfos}
@@ -139,12 +144,13 @@ export default function Payment() {
         }
       </Container>
       <>
-        {confirmedTicket ?
-          <TicketSummary formData={formData}/>
-          :
-          ''
+        {confirmedTicket &&
+          <>
+            <TicketSummary formData={formData} />
+            <PaymentForm disable={disable} setDisable={setDisable} />
+          </>
         }
       </>
     </>
-  ); 
+  );
 }

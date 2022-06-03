@@ -11,7 +11,7 @@ const Container = styled.div`
 `;
 
 const InfoText = styled.span`
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
@@ -40,7 +40,7 @@ const Option = styled.button`
   cursor: pointer;
 
   p {
-    font-family: 'Roboto';
+    font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -52,7 +52,7 @@ const Option = styled.button`
   }
 
   span {
-    font-family: 'Roboto';
+    font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;

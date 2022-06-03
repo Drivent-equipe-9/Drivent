@@ -3,10 +3,12 @@ import styled from 'styled-components';
 const Container = styled.div`
   display: flex;
   align-items: center;
+
+  margin-bottom: 30px;
 `;
 
 const InfoText = styled.span`
-  font-family: 'Roboto';
+  font-family: 'Roboto', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 20px;
@@ -33,7 +35,7 @@ const Summary = styled.div`
   cursor: pointer;
 
   p {
-    font-family: 'Roboto';
+    font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 16px;
@@ -45,7 +47,7 @@ const Summary = styled.div`
   }
 
   span {
-    font-family: 'Roboto';
+    font-family: 'Roboto', sans-serif;
     font-style: normal;
     font-weight: 400;
     font-size: 14px;
