@@ -10,8 +10,22 @@ export async function saveTicket(token, body) {
   return response.data;
 }
 
-export async function updatePayment() {
-  const response = await api.patch('/ticket');
+export async function updatePayment(token, userId) {
+  const response = await api.patch('/ticket', { userId }, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+}
+
+export async function findPayment(token) {
+  const response = await api.get('/ticket', {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
 
   return response.data;
 }

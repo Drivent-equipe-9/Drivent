@@ -16,6 +16,8 @@ const PaymentContainer = styled.div`
     margin-top: 20px;
 
     gap: 2vw;
+    
+    position: relative;
 `;
 
 const Form = styled.form`
@@ -36,9 +38,49 @@ const ThirdLine = styled.div`
 
 `;
 
+const SubmitContainer = styled.div`
+  margin-top: 80px !important;
+
+  position: absolute;
+  left: 0;
+  top: 90%;
+
+  > button {
+    margin-top: 0 !important;
+  }
+`;
+
+const PaymentConfirmed = styled.div`
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+
+  margin-top: 17px;
+`;
+
+const PaidText = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-size: 16px;
+  line-height: 19px;
+
+  color: #454545;
+
+  margin-left: 14px;
+`;
+
 export {
   Container,
   Form,
   PaymentContainer,
-  ThirdLine
+  ThirdLine,
+  SubmitContainer,
+  PaymentConfirmed,
+  PaidText
 };

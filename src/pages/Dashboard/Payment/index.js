@@ -1,4 +1,5 @@
-import { useState } from 'react';
+/* eslint-disable space-before-function-paren */
+import { useContext, useState } from 'react';
 import { useEffect } from 'react';
 
 import { toast } from 'react-toastify';
@@ -9,18 +10,22 @@ import { HostingModality } from './hostingModality/hostingModality';
 import { ConfirmationTicket } from './confirmation/confirmationTicket';
 import { TicketSummary } from './ticketSummary/ticketSummary';
 
-import { StyledTypography, SubmitContainer } from '../../../components/PersonalInformationForm';
+import { StyledTypography } from '../../../components/PersonalInformationForm';
 import { ContainerEmptyInfo, EmptyInfoText, Container } from './style';
 
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import useToken from '../../../hooks/useToken';
 import { getEventInfo } from '../../../services/eventApi';
 import PaymentForm from './cardForm/cardForm';
-import Button from '../../../components/Form/Button';
-import { ConfirmPayment } from './confirmation/confirmPayment';
+import { FaCheckCircle } from 'react-icons/fa';
+import { PaidText, PaymentConfirmed } from './cardForm/style';
+import { findPayment } from '../../../services/ticketApi';
+import UserContext from '../../../contexts/UserContext';
 
 export default function Payment() {
   const token = useToken();
+  const { userData } = useContext(UserContext);
+
   const [haveInfos, setHaveInfos] = useState();
   const [eventInfos, setEventInfos] = useState();
   const [formData, setFormData] = useState({
@@ -46,6 +51,8 @@ export default function Payment() {
   });
 
   const [confirmedTicket, setConfirmedTicket] = useState(false);
+  const [paymentData, setPaymentData] = useState([]);
+  const [paymentConfirm, SetPaymentConfirm] = useState(false);
 
   useEffect(() => {
     const promise = getPersonalInformations(token);
@@ -68,7 +75,16 @@ export default function Payment() {
           setHaveInfos(false);
         }
       });
-  }, []);
+
+    const promisePayment = findPayment(token);
+    promisePayment
+      .then((responsePayment) => {
+        setPaymentData(responsePayment);
+      })
+      .catch((error) => {
+        toast('Occoreu um erro, tente novamente mais tarde.');
+      });
+  }, [paymentConfirm]);
 
   return (
     <>
@@ -134,8 +150,18 @@ export default function Payment() {
         {confirmedTicket &&
           <>
             <TicketSummary formData={formData} />
-            <PaymentForm />
-            <ConfirmPayment />
+            <EmptyInfoText>Pagamento</EmptyInfoText>
+            {paymentData.isPaid || paymentConfirm ?
+              <PaymentConfirmed>
+                <FaCheckCircle size={45} color={'#36B853'} />
+                <PaidText>
+                  <strong>Pagamento confirmado!</strong>
+                  <span>Prossiga para escolha de hospedagem e atividades</span>
+                </PaidText>
+              </PaymentConfirmed>
+              :
+              <PaymentForm SetPaymentConfirm={SetPaymentConfirm} paymentConfirm={paymentConfirm} />
+            }
           </>
         }
       </>

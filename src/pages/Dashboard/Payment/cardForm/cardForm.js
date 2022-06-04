@@ -1,125 +1,152 @@
+/* eslint-disable no-restricted-globals */
+/* eslint-disable no-undef */
+/* eslint-disable space-before-function-paren */
 /* eslint-disable indent */
 import { TextField } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import Cards from 'react-credit-cards';
 import 'react-credit-cards/es/styles-compiled.css';
-import { EmptyInfoText } from '../style';
-import { Container, Form, PaymentContainer, ThirdLine } from './style';
+import { Container, Form, PaymentContainer, SubmitContainer, ThirdLine } from './style';
 import InputMask from 'react-input-mask';
-import { SubmitContainer } from '../../../../components/PersonalInformationForm';
 import Button from '../../../../components/Form/Button';
 import { updatePayment } from '../../../../services/ticketApi';
 import { toast } from 'react-toastify';
+import useToken from '../../../../hooks/useToken';
+import UserContext from '../../../../contexts/UserContext';
 
-export default class PaymentForm extends React.Component {
-    state = {
+export default function PaymentForm({ paymentConfirm, SetPaymentConfirm }) {
+    const token = useToken();
+    const { userData } = useContext(UserContext);
+    const [state, setState] = useState({
         cvc: '',
         expiry: '',
         focus: '',
         name: '',
         number: '',
-    };
+    });
 
-    handleInputFocus = (e) => {
-        this.setState({ focus: e.target.name });
+    const [error, setError] = useState({
+        cvc: false,
+        expiry: false,
+        name: false,
+        number: false,
+    });
+
+    //+ state.cvc + ' + ' + state.expiry + ' + ' + state.name + ' + ' + state.number
+    //let { user } = JSON.parse(localStorage.getItem('userData'));
+
+    async function submit(e) {
+        e.preventDefault();
+
+        try {
+            await updatePayment(token, userData.user.id);
+            SetPaymentConfirm(true);
+            toast('Pagamento feito com sucesso!');
+        } catch (error) {
+            SetPaymentConfirm(false);
+            toast('Algo deu errado, tente novamente.');
+        }
     }
 
-    handleInputChange = (e) => {
+    function handleInputFocus(e) {
+        setState({ ...state, focus: e.target.name });
+    }
+
+    function handleInputChange(e) {
         const { name, value } = e.target;
 
-        this.setState({ [name]: value });
+        setState({ ...state, [name]: value });
     }
 
-    render() {
-        async function handleSubmit() {
-            try {
-                const response = await updatePayment();
-                console.log(response);
-                toast('Pagamento feito com sucesso!');
-            } catch (error) {
-                console.log(error);
-                toast('Algo deu errado, tente novamente.');
-            }
-        }
-
-        return (
-            <Container>
-                <EmptyInfoText>Pagamento</EmptyInfoText>
-                <PaymentContainer id="PaymentForm">
-                    <Cards
-                        cvc={this.state.cvc}
-                        expiry={this.state.expiry}
-                        focused={this.state.focus}
-                        name={this.state.name}
-                        number={this.state.number}
+    return (
+        <Container>
+            <PaymentContainer id="PaymentForm">
+                <Cards
+                    cvc={state.cvc}
+                    expiry={state.expiry}
+                    focused={state.focus}
+                    name={state.name}
+                    number={state.number}
+                />
+                <Form onSubmit={submit}>
+                    <InputMask
+                        onChange={handleInputChange}
+                        onFocus={handleInputFocus}
+                        mask="9999 9999 9999 9999"
+                        maskChar=''
+                    >
+                        {() =>
+                            <TextField
+                                className='cardNumber'
+                                type="tel"
+                                name="number"
+                                placeholder="Card Number"
+                                variant="outlined"
+                                helperText="E.g.: 49..., 51..., 36..., 37..."
+                                size="small"
+                                required
+                                error={error.number}
+                            />
+                        }
+                    </InputMask>
+                    <TextField
+                        type="text"
+                        name="name"
+                        placeholder="Name"
+                        onChange={handleInputChange}
+                        onFocus={handleInputFocus}
+                        variant="outlined"
+                        size="small"
+                        autoComplete="off"
+                        required
+                        error={error.name}
                     />
-                    <Form onSubmit={handleSubmit}>
+                    <ThirdLine>
                         <InputMask
-                            onChange={this.handleInputChange}
-                            onFocus={this.handleInputFocus}
-                            mask="9999 9999 9999 9999"
+                            onChange={handleInputChange}
+                            onFocus={handleInputFocus}
+                            mask="99/99"
                             maskChar=''
                         >
                             {() =>
                                 <TextField
-                                    className='cardNumber'
-                                    type="tel"
-                                    name="number"
-                                    placeholder="Card Number"
+                                    type="expiry"
+                                    name="expiry"
+                                    placeholder="Valid Tru"
+                                    maxLength="5"
                                     variant="outlined"
-                                    helperText="E.g.: 49..., 51..., 36..., 37..."
                                     size="small"
+                                    required
+                                    error={error.expiry}
                                 />
                             }
                         </InputMask>
-                        <TextField
-                            type="text"
-                            name="name"
-                            placeholder="Name"
-                            onChange={this.handleInputChange}
-                            onFocus={this.handleInputFocus}
-                            variant="outlined"
-                            size="small"
-                            autoComplete="off"
-                        />
-                        <ThirdLine>
-                            <InputMask
-                                onChange={this.handleInputChange}
-                                onFocus={this.handleInputFocus}
-                                mask="99/99"
-                                maskChar=''
-                            >
-                                {() =>
-                                    <TextField
-                                        type="expiry"
-                                        name="expiry"
-                                        placeholder="Valid Tru"
-                                        maxLength="5"
-                                        variant="outlined"
-                                        size="small"
-                                    />
-                                }
-                            </InputMask>
-                            <InputMask
-                                onChange={this.handleInputChange}
-                                onFocus={this.handleInputFocus}
-                                mask="999"
-                                maskChar=''
-                            >
-                                {() =>
-                                    <TextField
-                                        type="cvc"
-                                        name="cvc"
-                                        placeholder="CVC"
-                                        variant="outlined"
-                                        size="small"
-                                    />
-                                }
-                            </InputMask>
-                        </ThirdLine>
-                    </Form>
-                </PaymentContainer>
-            </Container >
-        );
-    }
+                        <InputMask
+                            onChange={handleInputChange}
+                            onFocus={handleInputFocus}
+                            mask="999"
+                            maskChar=''
+                        >
+                            {() =>
+                                <TextField
+                                    type="cvc"
+                                    name="cvc"
+                                    placeholder="CVC"
+                                    variant="outlined"
+                                    size="small"
+                                    required
+                                    error={error.cvc}
+                                />
+                            }
+                        </InputMask>
+                    </ThirdLine>
+                    <SubmitContainer>
+                        <Button sx={{ pt: 10 }} type="submit">
+                            Finalizar Pagamento
+                        </Button>
+                    </SubmitContainer>
+                </Form>
+            </PaymentContainer>
+        </Container >
+    );
 }
