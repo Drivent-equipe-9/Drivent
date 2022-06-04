@@ -19,7 +19,7 @@ import { getEventInfo } from '../../../services/eventApi';
 import PaymentForm from './cardForm/cardForm';
 import { FaCheckCircle } from 'react-icons/fa';
 import { PaidText, PaymentConfirmed } from './cardForm/style';
-import { findPayment } from '../../../services/ticketApi';
+import { findPayment, findTicket } from '../../../services/ticketApi';
 import UserContext from '../../../contexts/UserContext';
 
 export default function Payment() {
@@ -53,8 +53,9 @@ export default function Payment() {
   const [confirmedTicket, setConfirmedTicket] = useState(false);
   const [paymentData, setPaymentData] = useState([]);
   const [paymentConfirm, SetPaymentConfirm] = useState(false);
+  const [ticketData, setTicketData] = useState({});
 
-  useEffect(() => {
+  useEffect(async () => {
     const promise = getPersonalInformations(token);
     promise
       .then((response) => {
@@ -84,7 +85,20 @@ export default function Payment() {
       .catch((error) => {
         toast('Occoreu um erro, tente novamente mais tarde.');
       });
+
+    const promiseTicket = findTicket(token, formData.enrollmentId);
+    promiseTicket
+      .then((responseTicket) => {
+        console.log(responseTicket);
+        setTicketData(responseTicket);
+      })
+      .catch((error) => {
+        console.log(error);
+        toast('Occoreu um erro, tente novamente mais tarde.');
+      });
   }, [paymentConfirm]);
+
+  console.log(ticketData);
 
   return (
     <>
