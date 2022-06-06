@@ -3,7 +3,7 @@ import useToken from '../../../../hooks/useToken';
 import { saveTicket } from '../../../../services/ticketApi';
 import { Container, InfoText, Option } from './style';
 
-export function ConfirmationTicket({ formData, setConfirmedTicket, setDuplicateTicket }) {
+export function ConfirmationTicket({ formData, setConfirmedTicket }) {
   const token = useToken();
 
   function submit() {
@@ -13,14 +13,8 @@ export function ConfirmationTicket({ formData, setConfirmedTicket, setDuplicateT
         toast('Ticket reservado com sucesso!');
         setConfirmedTicket(true);
       })
-      .catch((error) => {
+      .catch(() => {
         setConfirmedTicket(false);
-
-        if (error.response.status === 409) {
-          setDuplicateTicket(true);
-          toast('Você já possui um ticket.');
-          return;
-        }
         toast('Algo deu errado, tente novamente.');
       });
   }
