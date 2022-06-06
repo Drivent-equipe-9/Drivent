@@ -97,7 +97,7 @@ export default function Payment() {
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography>
 
-      {!ticketData ?
+      {!ticketData || !haveInfos ? 
         <Container confirmedTicket={confirmedTicket}>
           {!haveInfos ?
             <ContainerEmptyInfo>
