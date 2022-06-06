@@ -1,5 +1,5 @@
 /* eslint-disable space-before-function-paren */
-import { useContext, useState } from 'react';
+import { useState } from 'react';
 import { useEffect } from 'react';
 
 import { toast } from 'react-toastify';
@@ -20,14 +20,15 @@ import PaymentForm from './cardForm/cardForm';
 import { FaCheckCircle } from 'react-icons/fa';
 import { PaidText, PaymentConfirmed } from './cardForm/style';
 import { findPayment, findTicket } from '../../../services/ticketApi';
-import UserContext from '../../../contexts/UserContext';
 
 export default function Payment() {
   const token = useToken();
-  const { userData } = useContext(UserContext);
 
   const [haveInfos, setHaveInfos] = useState();
-  const [eventInfos, setEventInfos] = useState();
+  const [eventData, setEventData] = useState();
+  const [paymentData, setPaymentData] = useState([]);
+  const [ticketData, setTicketData] = useState({});
+
   const [formData, setFormData] = useState({
     eventId: '',
     enrollmentId: '',
@@ -51,11 +52,9 @@ export default function Payment() {
   });
 
   const [confirmedTicket, setConfirmedTicket] = useState(false);
-  const [paymentData, setPaymentData] = useState([]);
-  const [paymentConfirm, SetPaymentConfirm] = useState(false);
-  const [ticketData, setTicketData] = useState({});
+  const [confirmPayment, setConfirmPayment] = useState(false);
 
-  useEffect(async () => {
+  useEffect(() => {
     const promise = getPersonalInformations(token);
     promise
       .then((response) => {
@@ -64,121 +63,115 @@ export default function Payment() {
         const promiseEvent = getEventInfo();
         promiseEvent
           .then((responseEvent) => {
-            setEventInfos(responseEvent);
+            setEventData(responseEvent);
             setFormData({ ...formData, eventId: responseEvent.id, enrollmentId: response.id });
           })
           .catch(() => {
             toast('Não foi possível carregar as informações do evento!');
           });
-      })
-      .catch((error) => {
-        if (error.status === 404) {
-          setHaveInfos(false);
-        }
-      });
 
+        const promiseTicket = findTicket(token, response.id);
+        promiseTicket
+          .then((responseTicket) => {
+            setTicketData(responseTicket);
+          })
+          .catch(() => {
+            toast('Não foi possível carregar as informações do ticket!');
+          });
+      })
+      .catch(() => {
+        return;
+      });
+     
     const promisePayment = findPayment(token);
     promisePayment
       .then((responsePayment) => {
         setPaymentData(responsePayment);
       })
-      .catch((error) => {
-        toast('Occoreu um erro, tente novamente mais tarde.');
+      .catch(() => {
+        toast('Não foi possível carregar as informações do pagamento!');
       });
-
-    const promiseTicket = findTicket(token, formData.enrollmentId);
-    promiseTicket
-      .then((responseTicket) => {
-        console.log(responseTicket);
-        setTicketData(responseTicket);
-      })
-      .catch((error) => {
-        console.log(error);
-        toast('Occoreu um erro, tente novamente mais tarde.');
-      });
-  }, [paymentConfirm]);
-
-  console.log(ticketData);
+  }, [confirmedTicket, confirmPayment]);
 
   return (
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography>
-      <Container confirmedTicket={confirmedTicket}>
-        {!haveInfos ?
-          <ContainerEmptyInfo>
-            <EmptyInfoText>
-              Você precisa completar sua inscrição antes <br />
-              de prosseguir pra escolha de ingresso
-            </EmptyInfoText>
-          </ContainerEmptyInfo>
-          :
-          <TicketModality
-            selectedData={selectedData}
-            setSelectedData={setSelectedData}
-            setFormData={setFormData}
-            formData={formData}
-            eventInfos={eventInfos}
-            changeComponents={changeComponents}
-            setChangeComponents={setChangeComponents}
-          />
-        }
-        {changeComponents.onlineTicket ?
-          <ConfirmationTicket
-            formData={formData}
-            setConfirmedTicket={setConfirmedTicket}
-          />
-          :
-          ''
-        }
-        {changeComponents.withPresence ?
-          <HostingModality
-            selectedData={selectedData}
-            setSelectedData={setSelectedData}
-            setFormData={setFormData}
-            formData={formData}
-            eventInfos={eventInfos}
-            changeComponents={changeComponents}
-            setChangeComponents={setChangeComponents}
-          />
-          :
-          ''
-        }
-        {changeComponents.withHotel ?
-          <ConfirmationTicket
-            formData={formData}
-            setConfirmedTicket={setConfirmedTicket}
-          />
-          :
-          ''
-        }
-        {changeComponents.noHotel ?
-          <ConfirmationTicket
-            formData={formData}
-            setConfirmedTicket={setConfirmedTicket}
-          />
-          :
-          ''
-        }
-      </Container>
-      <>
-        {confirmedTicket &&
-          <>
-            <TicketSummary formData={formData} />
-            <EmptyInfoText>Pagamento</EmptyInfoText>
-            {paymentData.isPaid || paymentConfirm ?
-              <PaymentConfirmed>
-                <FaCheckCircle size={45} color={'#36B853'} />
-                <PaidText>
-                  <strong>Pagamento confirmado!</strong>
-                  <span>Prossiga para escolha de hospedagem e atividades</span>
-                </PaidText>
-              </PaymentConfirmed>
-              :
-              <PaymentForm SetPaymentConfirm={SetPaymentConfirm} paymentConfirm={paymentConfirm} />
-            }
-          </>
-        }
-      </>
+
+      {!ticketData ?
+        <Container confirmedTicket={confirmedTicket}>
+          {!haveInfos ?
+            <ContainerEmptyInfo>
+              <EmptyInfoText>
+                Você precisa completar sua inscrição antes <br />
+                de prosseguir pra escolha de ingresso
+              </EmptyInfoText>
+            </ContainerEmptyInfo>
+            :
+            <TicketModality
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+              setFormData={setFormData}
+              formData={formData}
+              eventInfos={eventData}
+              changeComponents={changeComponents}
+              setChangeComponents={setChangeComponents}
+            />
+          }
+          {changeComponents.onlineTicket ?
+            <ConfirmationTicket
+              formData={formData}
+              setConfirmedTicket={setConfirmedTicket}
+            />
+            :
+            ''
+          }
+          {changeComponents.withPresence ?
+            <HostingModality
+              selectedData={selectedData}
+              setSelectedData={setSelectedData}
+              setFormData={setFormData}
+              formData={formData}
+              eventInfos={eventData}
+              changeComponents={changeComponents}
+              setChangeComponents={setChangeComponents}
+            />
+            :
+            ''
+          }
+          {changeComponents.withHotel ?
+            <ConfirmationTicket
+              formData={formData}
+              setConfirmedTicket={setConfirmedTicket}
+            />
+            :
+            ''
+          }
+          {changeComponents.noHotel ?
+            <ConfirmationTicket
+              formData={formData}
+              setConfirmedTicket={setConfirmedTicket}
+            />
+            :
+            ''
+          }
+        </Container>
+        :
+        <>
+          <TicketSummary ticketData={ticketData} />
+          <EmptyInfoText>Pagamento</EmptyInfoText>
+          {paymentData.isPaid ?
+            <PaymentConfirmed>
+              <FaCheckCircle size={45} color={'#36B853'} />
+              <PaidText>
+                <strong>Pagamento confirmado!</strong>
+                <span>Prossiga para escolha de hospedagem e atividades</span>
+              </PaidText>
+            </PaymentConfirmed>
+            :
+            <PaymentForm setConfirmPayment={setConfirmPayment}/>
+          }
+        </>
+      }
     </>
   );
 }
