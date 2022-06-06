@@ -13,8 +13,6 @@ const PaymentContainer = styled.div`
     justify-content: flex-start;
     align-items: center;
 
-    margin-top: 20px;
-
     gap: 2vw;
     
     position: relative;
@@ -25,6 +23,8 @@ const Form = styled.form`
     
     display: flex;
     flex-direction: column;
+
+    padding-top: 20px;
     
     gap: 12px;
 `;
@@ -43,7 +43,7 @@ const SubmitContainer = styled.div`
 
   position: absolute;
   left: 0;
-  top: 90%;
+  top: 80%;
 
   > button {
     margin-top: 0 !important;

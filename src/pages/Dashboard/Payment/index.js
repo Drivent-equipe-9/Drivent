@@ -24,7 +24,7 @@ import { findPayment, findTicket } from '../../../services/ticketApi';
 export default function Payment() {
   const token = useToken();
 
-  const [haveInfos, setHaveInfos] = useState();
+  const [haveInfos, setHaveInfos] = useState(false);
   const [eventData, setEventData] = useState();
   const [paymentData, setPaymentData] = useState([]);
   const [ticketData, setTicketData] = useState({});
@@ -82,7 +82,7 @@ export default function Payment() {
       .catch(() => {
         return;
       });
-     
+
     const promisePayment = findPayment(token);
     promisePayment
       .then((responsePayment) => {
@@ -91,13 +91,13 @@ export default function Payment() {
       .catch(() => {
         toast('Não foi possível carregar as informações do pagamento!');
       });
-  }, [confirmedTicket, confirmPayment]);
+  }, [confirmedTicket, confirmPayment, haveInfos]);
 
   return (
     <>
       <StyledTypography variant="h4">Ingresso e pagamento</StyledTypography>
 
-      {!ticketData ?
+      {!ticketData || !haveInfos ?
         <Container confirmedTicket={confirmedTicket}>
           {!haveInfos ?
             <ContainerEmptyInfo>
@@ -168,7 +168,7 @@ export default function Payment() {
               </PaidText>
             </PaymentConfirmed>
             :
-            <PaymentForm setConfirmPayment={setConfirmPayment}/>
+            <PaymentForm setConfirmPayment={setConfirmPayment} />
           }
         </>
       }
