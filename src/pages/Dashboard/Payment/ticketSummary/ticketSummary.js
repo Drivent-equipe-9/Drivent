@@ -1,15 +1,15 @@
 import { Container, InfoText, Summary } from './style';
 
-export function TicketSummary({ formData }) {
+export function TicketSummary({ ticketData }) {
   let ticketType = '';
 
-  if (formData.isOnline === false && formData.withAccommodation === true) {
+  if (ticketData.isOnline === false && ticketData.withAccommodation === true) {
     ticketType = 'Presencial + Com Hotel';
   }
-  if (formData.isOnline === false && formData.withAccommodation === false) {
+  if (ticketData.isOnline === false && ticketData.withAccommodation === false) {
     ticketType = 'Presencial + Sem Hotel';
   }
-  if (formData.isOnline === true) {
+  if (ticketData.isOnline === true) {
     ticketType = 'Online';
   }
 
@@ -22,7 +22,7 @@ export function TicketSummary({ formData }) {
       <Container>
         <Summary >
           <p>{ticketType}</p>
-          <span>{`R$ ${formData.totalPrice}`}</span>
+          <span>{`R$ ${ticketData.totalPrice}`}</span>
         </Summary>
       </Container>
     </>
