@@ -14,7 +14,7 @@ import { toast } from 'react-toastify';
 import useToken from '../../../../hooks/useToken';
 import UserContext from '../../../../contexts/UserContext';
 
-export default function PaymentForm({ paymentConfirm, SetPaymentConfirm }) {
+export default function PaymentForm({ setConfirmPayment }) {
     const token = useToken();
     const { userData } = useContext(UserContext);
     const [state, setState] = useState({
@@ -40,10 +40,9 @@ export default function PaymentForm({ paymentConfirm, SetPaymentConfirm }) {
 
         try {
             await updatePayment(token, userData.user.id);
-            SetPaymentConfirm(true);
+            setConfirmPayment(true);
             toast('Pagamento feito com sucesso!');
         } catch (error) {
-            SetPaymentConfirm(false);
             toast('Algo deu errado, tente novamente.');
         }
     }
