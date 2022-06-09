@@ -31,7 +31,7 @@ export default function Hotel() {
           });
       })
       .catch(() => {
-        toast.error('Inscrição não encontrada');
+        setAccomodation(false);
       });
 
     const promisePayment = findPayment(token);
@@ -41,11 +41,10 @@ export default function Hotel() {
           setPaid(true);
         } else {
           setPaid(false);
-          toast('Pagamento não realizado.');
         }
       })
       .catch(() => {
-        toast.error('Pagamento não encontrado.');
+        setPaid(false);
       });
   }, []);
 
@@ -59,18 +58,15 @@ export default function Hotel() {
             de fazer a escolha de hospedagem
           </EmptyInfoText>
         </ContainerEmptyInfo>
-        :
-        ''
-      }
-      {!hasAccomodation ?
-        <ContainerEmptyInfo>
-          <EmptyInfoText>
-            Sua modalidade de ingresso não inclui hospedagem <br />
-            Prossiga para a escolha de atividades
-          </EmptyInfoText>
-        </ContainerEmptyInfo>
-        :
-        ''
+        : !hasAccomodation ?
+          <ContainerEmptyInfo>
+            <EmptyInfoText>
+              Sua modalidade de ingresso não inclui hospedagem <br />
+              Prossiga para a escolha de atividades
+            </EmptyInfoText>
+          </ContainerEmptyInfo>
+          :
+          ''
       }
     </>
   );

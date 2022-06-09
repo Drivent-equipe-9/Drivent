@@ -30,6 +30,7 @@ export default function PaymentForm({ setConfirmPayment }) {
     const [cardNumberError, setCardNumberError] = useState(false);
     const [cardCVCError, setCardCVCError] = useState(false);
     const [cardNameError, setCardNameError] = useState(false);
+    const [cardNameNumberError, setCardNameNumberError] = useState(false);
     const [cardExpiryError, setCardExpiryError] = useState(false);
     const [cardMonthExpiryError, setCardMonthExpiryError] = useState(false);
 
@@ -39,7 +40,6 @@ export default function PaymentForm({ setConfirmPayment }) {
         const isValid = isInputValid();
 
         if (!isValid) {
-            //throw (toast.error('Verifique as informações inseridas!'));
             return;
         }
 
@@ -52,9 +52,48 @@ export default function PaymentForm({ setConfirmPayment }) {
         }
     }
 
-    function isInputValid() {
-        let dateNow = dayjs();
+    function nameHasNumbers() {
+        const { name } = state;
+        let returnedBoolean;
 
+        [...name].forEach(letter => {
+            const isLetterANumber = letter > 0;
+            if (isLetterANumber) {
+                returnedBoolean = true;
+            } else {
+                returnedBoolean = false;
+            }
+        });
+
+        return returnedBoolean;
+    }
+
+    function isMonthValid() {
+        const { expiry } = state;
+        const isMonthBetweenOneAndTwelve = expiry.split('/')[0] > 12;
+
+        if (isMonthBetweenOneAndTwelve) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function isExpiryDateValid() {
+        const { expiry } = state;
+
+        let dateToday = dayjs();
+
+        const isExpiryDateBeforeToday = dayjs(expiry.replace('/', '-'), 'MM/YY').isBefore(dateToday, 'MM/YY');
+
+        if (isExpiryDateBeforeToday) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function isInputValid() {
         let message = '';
 
         if (state.number.length < 19) {
@@ -71,26 +110,35 @@ export default function PaymentForm({ setConfirmPayment }) {
             setCardCVCError(false);
         }
 
-        if (state.name.length < 5 || typeof state.name === 'number') {
+        if (state.name.length < 5) {
             setCardNameError(true);
             message = 'Nome precisa ter mais que 5 letras!';
         } else {
             setCardNameError(false);
         }
 
-        if (dayjs(state.expiry.replace('/', '-'), 'MM/YY').isBefore(dateNow, 'MM/YY')) {
+        if (nameHasNumbers()) {
+            setCardNameNumberError(true);
+            message = 'Nome não pode conter números!';
+        } else {
+            setCardNameNumberError(false);
+        }
+
+        if (isMonthValid()) {
+            setCardMonthExpiryError(true);
+            message = 'Insira um mês válido entre 1 e 12!';
+        } else {
+            setCardMonthExpiryError(false);
+        }
+
+        if (isExpiryDateValid()) {
             setCardExpiryError(true);
             message = 'Data de expiração precisa ser válida!';
         } else {
             setCardExpiryError(false);
         }
 
-        if (state.expiry.split('/')[0] > 12) {
-            setCardMonthExpiryError(true);
-            message = 'Insira um mês válido entre 1 e 12!';
-        } else {
-            setCardMonthExpiryError(false);
-        }
+        console.log(message);
 
         if (message.length > 0) {
             return false;
@@ -159,12 +207,15 @@ export default function PaymentForm({ setConfirmPayment }) {
                                 variant="outlined"
                                 helperText={cardNameError
                                     ? 'Nome precisa ter mais que 5 letras!'
-                                    : ' '
+                                    : cardNameNumberError
+                                        ? 'Nome não pode conter números!'
+                                        : ' '
                                 }
+                                pattern='[A-Za-z]'
                                 size="small"
                                 autoComplete="off"
                                 required
-                                error={cardNameError}
+                                error={cardNameError || cardNameNumberError}
                             />
                         }
                     </InputMask>
