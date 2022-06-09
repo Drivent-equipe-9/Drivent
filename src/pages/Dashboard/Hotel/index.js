@@ -3,7 +3,7 @@ import { toast } from 'react-toastify';
 import { StyledTypography } from '../../../components/PersonalInformationForm';
 import useToken from '../../../hooks/useToken';
 import { getPersonalInformations } from '../../../services/enrollmentApi';
-import { getHotelInfo } from '../../../services/hotelApi';
+import { getHotelInfo, getTotalVacanciesByHotelId } from '../../../services/hotelApi';
 import { findPayment, findTicket } from '../../../services/ticketApi';
 import { ContainerEmptyInfo, EmptyInfoText } from '../Payment/style';
 
@@ -13,6 +13,7 @@ export default function Hotel() {
   const token = useToken();
   const [isPaid, setPaid] = useState(false);
   const [hasAccomodation, setAccomodation] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
 
   const [hotels, setHotels] = useState([]);
 
@@ -55,7 +56,17 @@ export default function Hotel() {
     const promiseHotel = getHotelInfo(token);
     promiseHotel
       .then((responseHotel) => {
-        setHotels(responseHotel);
+        let arrayHotel = responseHotel;
+        
+        for (let i = 0; i < responseHotel.length; i++) {
+          let promise = getTotalVacanciesByHotelId(responseHotel[i].id, token); 
+          promise.then((vacancies) => {
+            arrayHotel[i].vacanciesLeft = vacancies.vacanciesLeft;
+            setHotels(arrayHotel);
+          }).catch(() => {
+            toast('Não foi possível carregar as vagas restantes!');
+          });
+        }
       })
       .catch(() => {
         toast('Não foi possível carregar as informações dos hoteis!');
@@ -80,7 +91,7 @@ export default function Hotel() {
             </EmptyInfoText>
           </ContainerEmptyInfo>
           :
-          <HotelModality hotelInfo={hotels} />
+          <HotelModality hotelInfo={hotels} setIsSelected={setIsSelected} />
       }
     </>
   );
