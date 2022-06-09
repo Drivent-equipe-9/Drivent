@@ -3,13 +3,18 @@ import { toast } from 'react-toastify';
 import { StyledTypography } from '../../../components/PersonalInformationForm';
 import useToken from '../../../hooks/useToken';
 import { getPersonalInformations } from '../../../services/enrollmentApi';
+import { getHotelInfo } from '../../../services/hotelApi';
 import { findPayment, findTicket } from '../../../services/ticketApi';
 import { ContainerEmptyInfo, EmptyInfoText } from '../Payment/style';
+
+import { HotelModality } from './hotelModality/hotelModality';
 
 export default function Hotel() {
   const token = useToken();
   const [isPaid, setPaid] = useState(false);
   const [hasAccomodation, setAccomodation] = useState(false);
+
+  const [hotels, setHotels] = useState([]);
 
   useEffect(() => {
     const promiseEnrollment = getPersonalInformations(token);
@@ -46,6 +51,15 @@ export default function Hotel() {
       .catch(() => {
         setPaid(false);
       });
+    
+    const promiseHotel = getHotelInfo(token);
+    promiseHotel
+      .then((responseHotel) => {
+        setHotels(responseHotel);
+      })
+      .catch(() => {
+        toast('Não foi possível carregar as informações dos hoteis!');
+      });
   }, []);
 
   return (
@@ -66,7 +80,7 @@ export default function Hotel() {
             </EmptyInfoText>
           </ContainerEmptyInfo>
           :
-          ''
+          <HotelModality hotelInfo={hotels} />
       }
     </>
   );
