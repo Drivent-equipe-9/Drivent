@@ -20,8 +20,11 @@ import { EventInfoProvider } from './contexts/EventInfoContext';
 import { UserProvider } from './contexts/UserContext';
 
 import useToken from './hooks/useToken';
+import { useState } from 'react';
 
 export default function App() {
+  const [hasHotel, setHasHotel ] = useState(false);
+
   return (
     <>
       <ToastContainer />
@@ -42,8 +45,8 @@ export default function App() {
                 }
               >
                 <Route path="subscription" element={<FillSubscription />} />
-                <Route path="payment" element={<Payment />} />
-                <Route path="hotel" element={<Hotel />} />
+                <Route path="payment" element={<Payment setHasHotel={setHasHotel} />} />
+                <Route path="hotel" element={<Hotel hasHotel={hasHotel} />} />
                 <Route path="activities" element={<Activities />} />
                 <Route path="certificate" element={<Certificate />} />
                 <Route index path="*" element={<Navigate to="/dashboard/subscription" />} />
