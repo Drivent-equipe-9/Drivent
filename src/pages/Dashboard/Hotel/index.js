@@ -1,10 +1,13 @@
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+
 import { StyledTypography } from '../../../components/PersonalInformationForm';
-import useToken from '../../../hooks/useToken';
+import { ContainerEmptyInfo, EmptyInfoText } from '../Payment/style';
+import Room from './room/room';
+
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import { findPayment, findTicket } from '../../../services/ticketApi';
-import { ContainerEmptyInfo, EmptyInfoText } from '../Payment/style';
+import useToken from '../../../hooks/useToken';
 
 export default function Hotel() {
   const token = useToken();
@@ -68,6 +71,7 @@ export default function Hotel() {
           :
           ''
       }
+      <Room/>
     </>
   );
 }
