@@ -21,6 +21,7 @@ import { UserProvider } from './contexts/UserContext';
 
 import useToken from './hooks/useToken';
 import { useState } from 'react';
+import HotelReserved from './pages/Dashboard/Hotel/HotelReserved/hotelReserved';
 
 export default function App() {
   const [hasHotel, setHasHotel ] = useState(false);
@@ -47,6 +48,7 @@ export default function App() {
                 <Route path="subscription" element={<FillSubscription />} />
                 <Route path="payment" element={<Payment setHasHotel={setHasHotel} />} />
                 <Route path="hotel" element={<Hotel hasHotel={hasHotel} />} />
+                <Route path="hotel/reservation" element={<HotelReserved />} />
                 <Route path="activities" element={<Activities />} />
                 <Route path="certificate" element={<Certificate />} />
                 <Route index path="*" element={<Navigate to="/dashboard/subscription" />} />
