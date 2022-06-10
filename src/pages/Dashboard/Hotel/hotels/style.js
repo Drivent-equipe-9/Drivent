@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Container = styled.div`
+const ContainerHotel = styled.div`
   display: flex;
   align-items: center;
 
@@ -25,7 +25,7 @@ const Option = styled.button`
   height: 264px;
   padding: 16px 14px 22px 14px;
 
-  background-color: ${({ isSelected }) => (isSelected ? '#FFEED2' : '#F1F1F1')};
+  background-color: ${({ isHotelSelected }) => (isHotelSelected ? '#FFEED2' : '#F1F1F1')};
 
   border-radius: 10px;
   border: none;
@@ -97,4 +97,64 @@ const Option = styled.button`
   }
 `;
 
-export { Container, Option, InfoText };
+const Container = styled.div`
+  width: 100%;
+`;
+
+const ContainerRoom = styled.div`
+  width:100%;
+
+  margin-top: 30px;
+
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+`;
+
+const Rooms = styled.button`
+  width: 190px;
+  height: 45px;
+
+  border: 1px solid #CECECE;
+  border-radius: 10px;
+  background-color: ${({ isRoomSelected }) => (isRoomSelected ? '#FFEED2' : '#F1F1F1')};
+  background-color: ${({ isRoomFull }) => (isRoomFull ? '#CECECE' : '')};
+  padding: 0 10px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  cursor: pointer;
+
+  span {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    //line-height: 20px;
+    //text-align: center;
+
+    color: #454545;
+  }
+
+  :disabled {
+    cursor: not-allowed;
+  }
+`;
+
+const Vacancies = styled.div`
+  &> * {
+    margin: 0;
+  }
+`;
+
+export {
+  ContainerHotel,
+  Container,
+  Option,
+  InfoText,
+  ContainerRoom,
+  Rooms,
+  Vacancies
+};
