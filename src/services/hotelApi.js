@@ -18,6 +18,15 @@ export async function getRooms(hotelId, token) {
   return response.data;
 }
 
+export async function getTotalVacanciesByHotelId(hotelId, token) {
+  const response = await api.get(`/hotels/${hotelId}/rooms/vacanciesLeft`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+}
+
 export async function saveHotel(token, body) {
   const response = await api.post('/hotel', body, {
     headers: {
