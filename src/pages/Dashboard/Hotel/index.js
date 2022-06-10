@@ -6,13 +6,19 @@ import { ContainerEmptyInfo, EmptyInfoText } from '../Payment/style';
 import Room from './room/room';
 
 import { getPersonalInformations } from '../../../services/enrollmentApi';
+import { getHotelInfo, getTotalVacanciesByHotelId } from '../../../services/hotelApi';
 import { findPayment, findTicket } from '../../../services/ticketApi';
 import useToken from '../../../hooks/useToken';
+
+import { HotelModality } from './hotelModality/hotelModality';
 
 export default function Hotel() {
   const token = useToken();
   const [isPaid, setPaid] = useState(false);
   const [hasAccomodation, setAccomodation] = useState(false);
+  const [isSelected, setIsSelected] = useState(false);
+
+  const [hotels, setHotels] = useState([]);
 
   useEffect(() => {
     const promiseEnrollment = getPersonalInformations(token);
@@ -49,6 +55,25 @@ export default function Hotel() {
       .catch(() => {
         setPaid(false);
       });
+    
+    const promiseHotel = getHotelInfo(token);
+    promiseHotel
+      .then((responseHotel) => {
+        let arrayHotel = responseHotel;
+        
+        for (let i = 0; i < responseHotel.length; i++) {
+          let promise = getTotalVacanciesByHotelId(responseHotel[i].id, token); 
+          promise.then((vacancies) => {
+            arrayHotel[i].vacanciesLeft = vacancies.vacanciesLeft;
+            setHotels(arrayHotel);
+          }).catch(() => {
+            toast('Não foi possível carregar as vagas restantes!');
+          });
+        }
+      })
+      .catch(() => {
+        toast('Não foi possível carregar as informações dos hoteis!');
+      });
   }, []);
 
   return (
@@ -69,7 +94,7 @@ export default function Hotel() {
             </EmptyInfoText>
           </ContainerEmptyInfo>
           :
-          ''
+          <HotelModality hotelInfo={hotels} setIsSelected={setIsSelected} />
       }
       <Room/>
     </>
