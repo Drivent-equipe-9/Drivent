@@ -112,9 +112,8 @@ const Rooms = styled.button`
 
   border: 1px solid #CECECE;
   border-radius: 10px;
-
   background-color: ${({ isRoomSelected }) => (isRoomSelected ? '#FFEED2' : '#F1F1F1')};
-
+  background-color: ${({ isRoomFull }) => (isRoomFull ? '#CECECE' : '')};
   padding: 0 10px;
 
   display: flex;
