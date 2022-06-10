@@ -3,20 +3,18 @@ import { toast } from 'react-toastify';
 
 import { StyledTypography } from '../../../components/PersonalInformationForm';
 import { ContainerEmptyInfo, EmptyInfoText } from '../Payment/style';
-import Room from './room/room';
 
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import { getHotelInfo, getTotalVacanciesByHotelId } from '../../../services/hotelApi';
 import { findPayment, findTicket } from '../../../services/ticketApi';
 import useToken from '../../../hooks/useToken';
 
-import { HotelModality } from './hotelModality/hotelModality';
+import { Hotels } from './hotels/hotels';
 
 export default function Hotel() {
   const token = useToken();
   const [isPaid, setPaid] = useState(false);
   const [hasAccomodation, setAccomodation] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
 
   const [hotels, setHotels] = useState([]);
 
@@ -55,14 +53,14 @@ export default function Hotel() {
       .catch(() => {
         setPaid(false);
       });
-    
+
     const promiseHotel = getHotelInfo(token);
     promiseHotel
       .then((responseHotel) => {
         let arrayHotel = responseHotel;
-        
+
         for (let i = 0; i < responseHotel.length; i++) {
-          let promise = getTotalVacanciesByHotelId(responseHotel[i].id, token); 
+          let promise = getTotalVacanciesByHotelId(responseHotel[i].id, token);
           promise.then((vacancies) => {
             arrayHotel[i].vacanciesLeft = vacancies.vacanciesLeft;
             setHotels(arrayHotel);
@@ -94,9 +92,10 @@ export default function Hotel() {
             </EmptyInfoText>
           </ContainerEmptyInfo>
           :
-          <HotelModality hotelInfo={hotels} setIsSelected={setIsSelected} />
+
+          <Hotels hotelInfo={hotels} />
+
       }
-      <Room/>
     </>
   );
 }
