@@ -1,13 +1,14 @@
-import { Container, InfoText, Option } from './style';
+import { Container, ContainerHotel, ContainerRoom, InfoText, Option, Rooms, Vacancies } from './style';
 import { saveHotel } from '../../../../services/hotelApi';
 import { toast } from 'react-toastify';
 import useToken from '../../../../hooks/useToken';
 import { getRooms } from '../../../../services/hotelApi';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { EmptyInfoText } from '../../Payment/style';
-import { ContainerRoom, Rooms, Vacancies } from './style';
 
 import { IoPersonOutline, IoPerson } from 'react-icons/io5';
+import { SubmitContainer } from '../../../../components/PersonalInformationForm';
+import Button from '../../../../components/Form/Button';
 
 export function Hotels({ hotelInfo }) {
   const token = useToken();
@@ -29,6 +30,7 @@ export function Hotels({ hotelInfo }) {
           response[i].isSelected = false;
           setRoomSelected(false);
         }
+
         response.sort(function compare(a, b) {
           if (a.number < b.number) return 1;
           if (a.number > b.number) return -1;
@@ -51,7 +53,7 @@ export function Hotels({ hotelInfo }) {
         setHotelSelected(true);
       } else {
         hotelInfo[i].isSelected = false;
-        setHotelSelected(false);
+        setHotelSelected(true);
       }
     }
 
@@ -64,7 +66,7 @@ export function Hotels({ hotelInfo }) {
         setRoomSelected(true);
         rooms[i].isSelected = true;
       } else {
-        setRoomSelected(false);
+        setRoomSelected(true);
         rooms[i].isSelected = false;
       }
     }
@@ -78,11 +80,20 @@ export function Hotels({ hotelInfo }) {
     setRooms([...rooms]);
   }
 
+  useEffect(() => {
+    if (isRoomSelected) {
+      toast('Deslize para baixo para finalizar a reserva!');
+    }
+  }, [isRoomSelected]);
+
+  function handleSubmit() {
+
+  }
+
   return (
     <>
       <InfoText>Primeiro, escolha seu hotel</InfoText>
-
-      <Container>
+      <ContainerHotel>
         {hotelInfo?.map((h) => (
           <Option key={h.id} id={h.id} name={h.name} onClick={() => handleHotelChange(h)} isHotelSelected={h.isSelected}>
             <img src={h.imageUrl} alt={h.name}></img>
@@ -97,76 +108,116 @@ export function Hotels({ hotelInfo }) {
             }
           </Option>
         ))}
-      </Container>
-      <>
-        <EmptyInfoText>Ótima pedida! Agora escolha seu quarto:</EmptyInfoText>
-        <ContainerRoom>
-          {rooms.map(room => (
-            <Rooms key={room.id} id={room.id} onClick={() => handleRoomSelection(room)} isRoomFull={!room.vacanciesLeft} isRoomSelected={room.isSelected}>
-              <span>{room?.number}</span>
-              {
-                room.accomodationType === 'Single' ?
-                  room.vacanciesLeft ?
-                    <Vacancies>
-                      {
-                        room.isSelected ?
-                          <IoPerson color={room.isSelected ? '#FF4791' : ''} size={22} />
-                          :
-                          <IoPersonOutline size={22} />
-                      }
-                    </Vacancies>
-                    :
-                    <Vacancies>
-                      <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                    </Vacancies>
-                  :
-                  room.accomodationType === 'Double' ?
+      </ContainerHotel>
+      {isHotelSelected &&
+        <Container >
+          <EmptyInfoText>Ótima pedida! Agora escolha seu quarto:</EmptyInfoText>
+          <ContainerRoom>
+            {rooms.map(room => (
+              <Rooms key={room.id} id={room.id} disabled={!room.vacanciesLeft} onClick={() => handleRoomSelection(room)} isRoomFull={!room.vacanciesLeft} isRoomSelected={room.isSelected}>
+                <span>{room?.number}</span>
+                {
+                  room.accomodationType === 'Single' ?
                     room.vacanciesLeft ?
-                      room.vacanciesLeft === 1 ?
-                        <Vacancies>
-                          {
-                            room.isSelected ?
-                              <IoPerson color={room.isSelected && '#FF4791'} size={22} />
-                              :
-                              <IoPersonOutline size={22} />
-                          }
-                          <IoPerson color='#000' size={22} />
-                        </Vacancies>
-                        :
-                        room.isSelected ?
-                          <Vacancies>
+                      <Vacancies>
+                        {
+                          room.isSelected ?
+                            <IoPerson color={room.isSelected ? '#FF4791' : ''} size={22} />
+                            :
                             <IoPersonOutline size={22} />
-                            <IoPerson color={room.isSelected && '#FF4791'} size={22} />
-                          </Vacancies>
-                          :
-                          <Vacancies>
-                            <IoPersonOutline size={22} />
-                            <IoPersonOutline size={22} />
-                          </Vacancies>
+                        }
+                      </Vacancies>
                       :
                       <Vacancies>
-                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
                         <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
                       </Vacancies>
                     :
-                    room.accomodationType === 'Triple' &&
+                    room.accomodationType === 'Double' ?
                       room.vacanciesLeft ?
-                      <Vacancies>
-                        <IoPersonOutline size={22} />
-                        <IoPersonOutline size={22} />
-                        <IoPersonOutline size={22} />
-                      </Vacancies>
+                        room.vacanciesLeft === 1 ?
+                          <Vacancies>
+                            {
+                              room.isSelected ?
+                                <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                                :
+                                <IoPersonOutline size={22} />
+                            }
+                            <IoPerson color='#000' size={22} />
+                          </Vacancies>
+                          :
+                          room.isSelected ?
+                            <Vacancies>
+                              <IoPersonOutline size={22} />
+                              <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                            </Vacancies>
+                            :
+                            <Vacancies>
+                              <IoPersonOutline size={22} />
+                              <IoPersonOutline size={22} />
+                            </Vacancies>
+                        :
+                        <Vacancies>
+                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                        </Vacancies>
                       :
-                      <Vacancies>
-                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                      </Vacancies>
-              }
-            </Rooms>
-          ))}
-        </ContainerRoom>
-      </>
+                      room.accomodationType === 'Triple' &&
+                        room.vacanciesLeft ?
+                        room.vacanciesLeft === 1 ?
+                          <Vacancies>
+                            {
+                              room.isSelected ?
+                                <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                                :
+                                <IoPersonOutline size={22} />
+                            }
+                            <IoPerson color='#000' size={22} />
+                            <IoPerson color='#000' size={22} />
+                          </Vacancies>
+                          :
+                          room.vacanciesLeft === 2 ?
+                            <Vacancies>
+                              <IoPersonOutline size={22} />
+                              {
+                                room.isSelected ?
+                                  <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                                  :
+                                  <IoPersonOutline size={22} />
+                              }
+                              <IoPerson color='#000' size={22} />
+                            </Vacancies>
+                            :
+                            room.isSelected ?
+                              <Vacancies>
+                                <IoPersonOutline size={22} />
+                                <IoPersonOutline size={22} />
+                                <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                              </Vacancies>
+                              :
+                              <Vacancies>
+                                <IoPersonOutline size={22} />
+                                <IoPersonOutline size={22} />
+                                <IoPersonOutline size={22} />
+                              </Vacancies>
+                        :
+                        <Vacancies>
+                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                        </Vacancies>
+                }
+              </Rooms>
+            ))}
+          </ContainerRoom>
+          {isRoomSelected &&
+            <SubmitContainer>
+              <Button onClick={() => handleSubmit}>
+                RESERVAR QUARTO
+              </Button>
+            </SubmitContainer>
+          }
+        </Container>
+      }
     </>
   );
 }

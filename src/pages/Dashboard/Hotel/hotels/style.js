@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Container = styled.div`
+const ContainerHotel = styled.div`
   display: flex;
   align-items: center;
 
@@ -96,6 +96,10 @@ const Option = styled.button`
   }
 `;
 
+const Container = styled.div`
+  width: 100%;
+`;
+
 const ContainerRoom = styled.div`
   width:100%;
 
@@ -132,6 +136,10 @@ const Rooms = styled.button`
 
     color: #454545;
   }
+
+  :disabled {
+    cursor: not-allowed;
+  }
 `;
 
 const Vacancies = styled.div`
@@ -141,6 +149,7 @@ const Vacancies = styled.div`
 `;
 
 export {
+  ContainerHotel,
   Container,
   Option,
   InfoText,
