@@ -20,9 +20,11 @@ import PaymentForm from './cardForm/cardForm';
 import { FaCheckCircle } from 'react-icons/fa';
 import { PaidText, PaymentConfirmed } from './cardForm/style';
 import { findPayment, findTicket } from '../../../services/ticketApi';
+import useChangeRoom from '../../../hooks/useChangeRoom';
 
 export default function Payment() {
   const token = useToken();
+  const { setChangeRoom } = useChangeRoom();
 
   const [haveInfos, setHaveInfos] = useState(false);
   const [eventData, setEventData] = useState();
@@ -55,6 +57,7 @@ export default function Payment() {
   const [confirmPayment, setConfirmPayment] = useState(false);
 
   useEffect(() => {
+    setChangeRoom(false);
     const promise = getPersonalInformations(token);
     promise
       .then((response) => {
