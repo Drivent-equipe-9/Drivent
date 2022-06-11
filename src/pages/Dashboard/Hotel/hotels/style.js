@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-const Container = styled.div`
+const ContainerHotel = styled.div`
   display: flex;
   align-items: center;
 
@@ -77,6 +77,7 @@ const Option = styled.button`
     letter-spacing: 0em;
     text-align: left;
 
+    margin-top: 3px;
     color: #454545;
   }
 
@@ -96,6 +97,10 @@ const Option = styled.button`
   }
 `;
 
+const Container = styled.div`
+  width: 100%;
+`;
+
 const ContainerRoom = styled.div`
   width:100%;
 
@@ -112,9 +117,8 @@ const Rooms = styled.button`
 
   border: 1px solid #CECECE;
   border-radius: 10px;
-
   background-color: ${({ isRoomSelected }) => (isRoomSelected ? '#FFEED2' : '#F1F1F1')};
-
+  background-color: ${({ isRoomFull }) => (isRoomFull ? '#CECECE' : '')};
   padding: 0 10px;
 
   display: flex;
@@ -133,6 +137,10 @@ const Rooms = styled.button`
 
     color: #454545;
   }
+
+  :disabled {
+    cursor: not-allowed;
+  }
 `;
 
 const Vacancies = styled.div`
@@ -142,6 +150,7 @@ const Vacancies = styled.div`
 `;
 
 export {
+  ContainerHotel,
   Container,
   Option,
   InfoText,

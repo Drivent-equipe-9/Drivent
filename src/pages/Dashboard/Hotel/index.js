@@ -10,15 +10,29 @@ import { findPayment, findTicket } from '../../../services/ticketApi';
 import useToken from '../../../hooks/useToken';
 
 import { Hotels } from './hotels/hotels';
+import { useNavigate } from 'react-router-dom';
+import useChangeRoom from '../../../hooks/useChangeRoom';
+import { getReservation } from '../../../services/reservationApi';
 
 export default function Hotel() {
   const token = useToken();
-  const [isPaid, setPaid] = useState(false);
-  const [hasAccomodation, setAccomodation] = useState(false);
+  const navigate = useNavigate();
 
+  const { changeRoom, setChangeRoom } = useChangeRoom();
+  const [hasAccomodation, setAccomodation] = useState(false);
+  const [isPaid, setPaid] = useState(false);
   const [hotels, setHotels] = useState([]);
 
   useEffect(() => {
+    const promise = getReservation(token);
+    promise
+      .then((reservation) => {
+        if (reservation && !changeRoom) {
+          navigate('/dashboard/hotel/reservation');
+          return;
+        }
+      });
+
     const promiseEnrollment = getPersonalInformations(token);
     promiseEnrollment
       .then((response) => {
@@ -92,9 +106,7 @@ export default function Hotel() {
             </EmptyInfoText>
           </ContainerEmptyInfo>
           :
-
-          <Hotels hotelInfo={hotels} />
-
+          <Hotels hotelInfo={hotels} setHotels={setHotels} setChangeRoom={setChangeRoom} />
       }
     </>
   );
