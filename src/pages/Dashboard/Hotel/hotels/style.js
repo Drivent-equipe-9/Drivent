@@ -77,6 +77,7 @@ const Option = styled.button`
     letter-spacing: 0em;
     text-align: left;
 
+    margin-top: 3px;
     color: #454545;
   }
 
