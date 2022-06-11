@@ -8,3 +8,12 @@ export async function getReservation(token) {
   });
   return response.data;
 };
+
+export async function createReservation(body, token) {
+  const response = await api.post('/reservation', body, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+  return response.data;
+};

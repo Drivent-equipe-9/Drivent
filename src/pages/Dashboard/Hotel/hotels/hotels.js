@@ -9,9 +9,12 @@ import { EmptyInfoText } from '../../Payment/style';
 import { IoPersonOutline, IoPerson } from 'react-icons/io5';
 import { SubmitContainer } from '../../../../components/PersonalInformationForm';
 import Button from '../../../../components/Form/Button';
+import { createReservation } from '../../../../services/reservationApi';
+import { useNavigate } from 'react-router-dom';
 
 export function Hotels({ hotelInfo }) {
   const token = useToken();
+  const navigate = useNavigate();
   const [rooms, setRooms] = useState([]);
   const [isHotelSelected, setHotelSelected] = useState(false);
   const [isRoomSelected, setRoomSelected] = useState(false);
@@ -56,7 +59,7 @@ export function Hotels({ hotelInfo }) {
         setHotelSelected(true);
       }
     }
-
+    
     return hotels;
   }
 
@@ -65,6 +68,7 @@ export function Hotels({ hotelInfo }) {
       if (rooms[i].number === room.number) {
         setRoomSelected(true);
         rooms[i].isSelected = true;
+        setFormReservationData({ ...formReservationData, roomId: room.id });
       } else {
         setRoomSelected(true);
         rooms[i].isSelected = false;
@@ -85,9 +89,17 @@ export function Hotels({ hotelInfo }) {
       toast('Deslize para baixo para finalizar a reserva!');
     }
   }, [isRoomSelected]);
-
+  
   function handleSubmit() {
+    const promise = createReservation(formReservationData, token);
+    promise
+      .then((response) => {
+        toast('Reserva criada com sucesso!');
+        navigate('/dashboard/hotel/reservation');
+      })
+      .catch(() => {
 
+      });
   }
 
   return (
@@ -211,7 +223,7 @@ export function Hotels({ hotelInfo }) {
           </ContainerRoom>
           {isRoomSelected &&
             <SubmitContainer>
-              <Button onClick={() => handleSubmit}>
+              <Button onClick={() => handleSubmit()}>
                 RESERVAR QUARTO
               </Button>
             </SubmitContainer>
