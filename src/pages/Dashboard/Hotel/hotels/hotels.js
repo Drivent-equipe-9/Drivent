@@ -25,6 +25,11 @@ export function Hotels({ hotelInfo }) {
 
   function handleHotelChange(h) {
     renderHotel(h);
+
+    if (!h.vacanciesLeft) {
+      toast.error('Não há vagas!');
+    }
+
     setFormReservationData({ ...formReservationData, hotelId: h.id });
     const promiseRoom = getRooms(h.id, token);
     promiseRoom
@@ -57,11 +62,16 @@ export function Hotels({ hotelInfo }) {
         setHotelSelected(true);
       }
     }
-    
+
     return hotels;
   }
 
   function handleRoomSelection(room) {
+    if (!room.vacanciesLeft) {
+      toast.error('Não há vagas neste quarto');
+      return;
+    }
+
     for (let i = 0; i < rooms.length; i++) {
       if (rooms[i].number === room.number) {
         setRoomSelected(true);
@@ -87,16 +97,16 @@ export function Hotels({ hotelInfo }) {
       toast('Deslize para baixo para finalizar a reserva!');
     }
   }, [isRoomSelected]);
-  
+
   function handleSubmit() {
     const promise = createReservation(formReservationData, token);
     promise
-      .then((response) => {
+      .then(() => {
         toast('Reserva criada com sucesso!');
         navigate('/dashboard/hotel/reservation');
       })
       .catch(() => {
-
+        return;
       });
   }
 
@@ -126,26 +136,67 @@ export function Hotels({ hotelInfo }) {
             {rooms.map(room => (
               <Rooms key={room.id} id={room.id} disabled={!room.vacanciesLeft} onClick={() => handleRoomSelection(room)} isRoomFull={!room.vacanciesLeft} isRoomSelected={room.isSelected}>
                 <span>{room?.number}</span>
-                {
-                  room.accomodationType === 'Single' ?
+                {room.accomodationType === 'Single' ?
+                  room.vacanciesLeft ?
+                    <Vacancies>
+                      {
+                        room.isSelected ?
+                          <IoPerson color={room.isSelected ? '#FF4791' : ''} size={22} />
+                          :
+                          <IoPersonOutline size={22} />
+                      }
+                    </Vacancies>
+                    :
+                    <Vacancies>
+                      <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                    </Vacancies>
+                  :
+                  room.accomodationType === 'Double' ?
                     room.vacanciesLeft ?
-                      <Vacancies>
-                        {
-                          room.isSelected ?
-                            <IoPerson color={room.isSelected ? '#FF4791' : ''} size={22} />
-                            :
+                      room.vacanciesLeft === 1 ?
+                        <Vacancies>
+                          {
+                            room.isSelected ?
+                              <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                              :
+                              <IoPersonOutline size={22} />
+                          }
+                          <IoPerson color='#000' size={22} />
+                        </Vacancies>
+                        :
+                        room.isSelected ?
+                          <Vacancies>
                             <IoPersonOutline size={22} />
-                        }
-                      </Vacancies>
+                            <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                          </Vacancies>
+                          :
+                          <Vacancies>
+                            <IoPersonOutline size={22} />
+                            <IoPersonOutline size={22} />
+                          </Vacancies>
                       :
                       <Vacancies>
                         <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
                       </Vacancies>
                     :
-                    room.accomodationType === 'Double' ?
+                    room.accomodationType === 'Triple' &&
                       room.vacanciesLeft ?
-                        room.vacanciesLeft === 1 ?
+                      room.vacanciesLeft === 1 ?
+                        <Vacancies>
+                          {
+                            room.isSelected ?
+                              <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                              :
+                              <IoPersonOutline size={22} />
+                          }
+                          <IoPerson color='#000' size={22} />
+                          <IoPerson color='#000' size={22} />
+                        </Vacancies>
+                        :
+                        room.vacanciesLeft === 2 ?
                           <Vacancies>
+                            <IoPersonOutline size={22} />
                             {
                               room.isSelected ?
                                 <IoPerson color={room.isSelected && '#FF4791'} size={22} />
@@ -157,6 +208,7 @@ export function Hotels({ hotelInfo }) {
                           :
                           room.isSelected ?
                             <Vacancies>
+                              <IoPersonOutline size={22} />
                               <IoPersonOutline size={22} />
                               <IoPerson color={room.isSelected && '#FF4791'} size={22} />
                             </Vacancies>
@@ -164,57 +216,14 @@ export function Hotels({ hotelInfo }) {
                             <Vacancies>
                               <IoPersonOutline size={22} />
                               <IoPersonOutline size={22} />
-                            </Vacancies>
-                        :
-                        <Vacancies>
-                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                        </Vacancies>
-                      :
-                      room.accomodationType === 'Triple' &&
-                        room.vacanciesLeft ?
-                        room.vacanciesLeft === 1 ?
-                          <Vacancies>
-                            {
-                              room.isSelected ?
-                                <IoPerson color={room.isSelected && '#FF4791'} size={22} />
-                                :
-                                <IoPersonOutline size={22} />
-                            }
-                            <IoPerson color='#000' size={22} />
-                            <IoPerson color='#000' size={22} />
-                          </Vacancies>
-                          :
-                          room.vacanciesLeft === 2 ?
-                            <Vacancies>
                               <IoPersonOutline size={22} />
-                              {
-                                room.isSelected ?
-                                  <IoPerson color={room.isSelected && '#FF4791'} size={22} />
-                                  :
-                                  <IoPersonOutline size={22} />
-                              }
-                              <IoPerson color='#000' size={22} />
                             </Vacancies>
-                            :
-                            room.isSelected ?
-                              <Vacancies>
-                                <IoPersonOutline size={22} />
-                                <IoPersonOutline size={22} />
-                                <IoPerson color={room.isSelected && '#FF4791'} size={22} />
-                              </Vacancies>
-                              :
-                              <Vacancies>
-                                <IoPersonOutline size={22} />
-                                <IoPersonOutline size={22} />
-                                <IoPersonOutline size={22} />
-                              </Vacancies>
-                        :
-                        <Vacancies>
-                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                          <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                        </Vacancies>
+                      :
+                      <Vacancies>
+                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                      </Vacancies>
                 }
               </Rooms>
             ))}

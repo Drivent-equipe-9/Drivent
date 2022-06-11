@@ -62,7 +62,7 @@ export default function HotelReserved() {
           <img src={reservation?.Hotel.imageUrl} alt={reservation?.Hotel.name}></img>
           <h2>{reservation?.Hotel.name}</h2>
           <h3>Quarto reservado</h3>
-          <p>{reservation?.Room.number} ({reservation?.Room.accomodationType})`</p>
+          <p>{reservation?.Room.number} ({reservation?.Room.accomodationType})</p>
           <h3>Pessoas no seu quarto</h3>
           <p>{people}</p>
         </Option>

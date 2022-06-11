@@ -17,22 +17,21 @@ import { getReservation } from '../../../services/reservationApi';
 export default function Hotel() {
   const token = useToken();
   const navigate = useNavigate();
-  const { changeRoom, setChangeRoom } = useChangeRoom();
-  const [isPaid, setPaid] = useState(false);
-  const [hasAccomodation, setAccomodation] = useState(false);
 
+  const { changeRoom, setChangeRoom } = useChangeRoom();
+  const [hasAccomodation, setAccomodation] = useState(false);
+  const [isPaid, setPaid] = useState(false);
   const [hotels, setHotels] = useState([]);
 
-  async function getReserve() {
-    return await getReservation(token);
-  }
-
   useEffect(() => {
-    const reservation = getReserve();
-    if(reservation && !changeRoom) {
-      navigate('/dashboard/hotel/reservation');
-      return;
-    }
+    const promise = getReservation(token);
+    promise
+      .then((reservation) => {
+        if (reservation && !changeRoom) {
+          navigate('/dashboard/hotel/reservation');
+          return;
+        }
+      });
 
     const promiseEnrollment = getPersonalInformations(token);
     promiseEnrollment
@@ -107,9 +106,7 @@ export default function Hotel() {
             </EmptyInfoText>
           </ContainerEmptyInfo>
           :
-
           <Hotels hotelInfo={hotels} setHotels={setHotels} setChangeRoom={setChangeRoom} />
-
       }
     </>
   );
