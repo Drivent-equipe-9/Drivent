@@ -14,6 +14,9 @@ import UserContext from '../../contexts/UserContext';
 
 import useSignIn from '../../hooks/api/useSignIn';
 
+import styled from 'styled-components';
+import axios from 'axios';
+
 export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -38,6 +41,19 @@ export default function SignIn() {
     }
   } 
 
+  function test() {
+    const urlParams = new URLSearchParams(window.location.search);
+    console.log(urlParams);
+    const code = urlParams.get('code');
+    console.log(code);
+    //const code = '061456318093ba2b5e24';
+    axios.post('/oauth/github/login', { code })
+      .then((res) => {
+        console.log(res);
+	  //localStorage.setItem('token', res.data.token);
+      });
+  }
+
   return (
     <AuthLayout background={eventInfo.backgroundImageUrl}>
       <Row>
@@ -51,6 +67,7 @@ export default function SignIn() {
           <Input label="Senha" type="password" fullWidth value={password} onChange={e => setPassword(e.target.value)} />
           <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
         </form>
+        <Teste onClick={test}>Entrar com gitHub</Teste>
       </Row>
       <Row>
         <Link to="/enroll">Não possui login? Inscreva-se</Link>
@@ -58,3 +75,25 @@ export default function SignIn() {
     </AuthLayout>
   );
 }
+
+const Teste = styled.button`
+  width: 100%;
+  height: 35px;
+
+  margin-top: 10px;
+
+  border-radius: 5px;
+  border: none;
+
+  color: white;
+  background-color: black;
+
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  //font-weight: 400;
+  font-size: 16px;
+  //line-height: 23px;
+  text-align: center;
+  text-transform: uppercase;
+
+`;

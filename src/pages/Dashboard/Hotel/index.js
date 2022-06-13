@@ -96,7 +96,7 @@ export default function Hotel() {
           :
           <HotelModality hotelInfo={hotels} setIsSelected={setIsSelected} />
       }
-      <Room/>
+      
     </>
   );
 }
