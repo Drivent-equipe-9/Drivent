@@ -1,5 +1,4 @@
 import { Container, ContainerHotel, ContainerRoom, InfoText, Option, Rooms, Vacancies } from './style';
-import { saveHotel } from '../../../../services/hotelApi';
 import { toast } from 'react-toastify';
 import useToken from '../../../../hooks/useToken';
 import { getRooms } from '../../../../services/hotelApi';
@@ -124,7 +123,7 @@ export function Hotels({ hotelInfo }) {
             {!h?.vacanciesLeft ?
               <p>0</p>
               :
-              <p>{h.vacanciesLeft}</p>
+              <p>{h?.vacanciesLeft}</p>
             }
           </Option>
         ))}
@@ -148,7 +147,7 @@ export function Hotels({ hotelInfo }) {
                     </Vacancies>
                     :
                     <Vacancies>
-                      <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                      <IoPerson color={'#8C8C8C'} size={22} />
                     </Vacancies>
                   :
                   room.accomodationType === 'Double' ?
@@ -176,8 +175,8 @@ export function Hotels({ hotelInfo }) {
                           </Vacancies>
                       :
                       <Vacancies>
-                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                        <IoPerson color={'#8C8C8C'} size={22} />
+                        <IoPerson color={'#8C8C8C'} size={22} />
                       </Vacancies>
                     :
                     room.accomodationType === 'Triple' &&
@@ -220,9 +219,9 @@ export function Hotels({ hotelInfo }) {
                             </Vacancies>
                       :
                       <Vacancies>
-                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
-                        <IoPerson color={!room.vacanciesLeft ? '#8C8C8C' : ''} size={22} />
+                        <IoPerson color={'#8C8C8C'} size={22} />
+                        <IoPerson color={'#8C8C8C'} size={22} />
+                        <IoPerson color={'#8C8C8C'} size={22} />
                       </Vacancies>
                 }
               </Rooms>
