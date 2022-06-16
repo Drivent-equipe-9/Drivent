@@ -1,14 +1,23 @@
 import { useEffect, useState } from 'react';
+
+import { toast } from 'react-toastify';
+
 import { StyledTypography } from '../../../components/PersonalInformationForm';
 import { ContainerEmptyInfo, EmptyInfoText } from '../Payment/style';
-import useToken from '../../../hooks/useToken';
+import { Activity } from './activity/activity';
+
+import PuffLoading from '../../../components/PuffLoading';
+
 import { getPersonalInformations } from '../../../services/enrollmentApi';
 import { findPayment, findTicket } from '../../../services/ticketApi';
-import PuffLoading from '../../../components/PuffLoading';
+import { getDatesInfo } from '../../../services/activitiesApi';
+
+import useToken from '../../../hooks/useToken';
 
 export default function Activities() {
   const token = useToken();
 
+  const [dates, setDates] = useState([]);
   const [isOnline, setOnline] = useState(false);
   const [isPaid, setPaid] = useState(false);
 
@@ -55,6 +64,15 @@ export default function Activities() {
         setOnline(false);
         setLoading(false);
       });
+
+    const promiseActivity = getDatesInfo(token);
+    promiseActivity
+      .then((responseActivity) => {
+        setDates(responseActivity);
+      })
+      .catch(() => {
+        toast('Não foi possível carregar as informações das atividades!');
+      });
   }, []);
 
   return (
@@ -79,7 +97,7 @@ export default function Activities() {
           isLoading ?
             <PuffLoading>Loading</PuffLoading>
             :
-            <h1>Aqui vão as atividades</h1>
+            <Activity dateInfo={dates} setDates={setDates} />
       }
     </>
   );
