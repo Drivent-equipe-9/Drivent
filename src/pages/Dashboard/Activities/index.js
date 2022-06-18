@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 import { StyledTypography } from '../../../components/PersonalInformationForm';
 import { ContainerEmptyInfo, EmptyInfoText } from '../Payment/style';
-import { Activity } from './activity/activity';
+import { Activity } from './render/activity';
 
 import PuffLoading from '../../../components/PuffLoading';
 
@@ -17,7 +17,7 @@ import useToken from '../../../hooks/useToken';
 export default function Activities() {
   const token = useToken();
 
-  const [dates, setDates] = useState([]);
+  const [dates, setDates] = useState();
   const [isOnline, setOnline] = useState(false);
   const [isPaid, setPaid] = useState(false);
 

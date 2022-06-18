@@ -13,21 +13,22 @@ import {
 import { getActivitiesByDate } from '../../../../services/activitiesApi';
 import { toast } from 'react-toastify';
 import useToken from '../../../../hooks/useToken';
-import Box from '@mui/material/Box';
 
 import { useEffect, useState } from 'react';
 
 import { useNavigate } from 'react-router-dom';
-  
+import { Box } from '@material-ui/core';
+
 export function Activity({ dateInfo }) {
   const token = useToken();
   const navigate = useNavigate();
+
   const [isDateSelected, setDateSelected] = useState(false);
   const [arrayPrincipal, setArrayPrincipal] = useState([]);
   const [arrayLateral, setArrayLateral] = useState([]);
-  const [allActivities, setAllActivities] = useState([]);
   const [arrayWorkshop, setArrayWorkshop] = useState([]);
-  
+  const [allActivities, setAllActivities] = useState([]);
+
   function handleDateChange(d) {
     renderDate(d);
 
@@ -35,22 +36,20 @@ export function Activity({ dateInfo }) {
     let newLateral = [];
     let newWorkshop = [];
 
-    const promiseActivity = getActivitiesByDate(d, token);
+    const promiseActivity = getActivitiesByDate(d.originalDate, token);
     promiseActivity
       .then((response) => {
         setAllActivities(response);
         for (let i = 0; i < response.length; i++) {
           response[i].isSelected = false;
-          setDateSelected(false);
 
-          if (response[i].location === 'Auditório Principal' && response[i].date === d) {
+          if (response[i].location === 'Auditório Principal' && response[i].date === d.originalDate) {
             newPrincipal.push(response[i]);
           }
-          if (response[i].location === 'Auditório Lateral' && response[i].date === d) {
+          if (response[i].location === 'Auditório Lateral' && response[i].date === d.originalDate) {
             newLateral.push(response[i]);
           }
-
-          if (response[i].location === 'Sala de Workshop' && response[i].date === d) {
+          if (response[i].location === 'Sala de Workshop' && response[i].date === d.originalDate) {
             newWorkshop.push(response[i]);
           }
         }
@@ -74,10 +73,10 @@ export function Activity({ dateInfo }) {
         setDateSelected(true);
       }
     }
-  
+
     return dates;
   }
-  
+
   function checkBoxSizePrincipal(a) {
     let margin = 0;
     let size = 0;
@@ -107,7 +106,6 @@ export function Activity({ dateInfo }) {
           margin = 80 * diff + 10 * diff;
         }
       }
-      console.log({ ...a[i], margin, size });
       newArray.push({ ...a[i], margin, size });
     }
     setArrayPrincipal(newArray);
@@ -142,8 +140,6 @@ export function Activity({ dateInfo }) {
           margin = 80 * diff + 10 * diff;
         }
       }
-
-      console.log({ ...a[i], margin, size });
       newArray.push({ ...a[i], margin, size });
     }
     setArrayLateral(newArray);
@@ -182,15 +178,15 @@ export function Activity({ dateInfo }) {
     setArrayWorkshop(newArray);
   }
 
-  function handleActivitySelection(a) {}
+  function handleActivitySelection(a) { }
 
   return (
     <>
-      <InfoText>Primeiro, filtre pelo dia do evento: </InfoText>
+      <InfoText isSelected={isDateSelected}>Primeiro, filtre pelo dia do evento: </InfoText>
       <ContainerDate>
         {dateInfo?.map((d) => (
-          <Option name={d} onClick={() => handleDateChange(d)} isDateSelected={d.isSelected}>
-            <h1>{d}</h1>
+          <Option key={d.id} onClick={() => handleDateChange(d)} isDateSelected={d.isSelected}>
+            {d.date}
           </Option>
         ))}
       </ContainerDate>

@@ -3,9 +3,9 @@ import styled from 'styled-components';
 const ContainerDate = styled.div`
   display: flex;
   align-items: center;
+  justify-content: flex-start;
   background-color: white;
   width: 100%;
-  justify-content: center;
   margin-bottom: 60px;
   margin-top: 28px;
 
@@ -15,28 +15,43 @@ const ContainerDate = styled.div`
 `;
 
 const InfoText = styled.span`
-  font-family: Roboto;
-  font-size: 34px;
+  margin-top: 25%;
+
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
   font-weight: 400;
-  line-height: 40px;
-  letter-spacing: 0em;
-  text-align: left;
-  color: #000000;
+  font-size: 20px;
+  line-height: 23px;
+  text-align: center;
+
+  color: #8e8e8e;
+
+  ${({ isSelected }) => (isSelected && 'display: none')}
 `;
 
 const Option = styled.button`
   width: 131px;
-  height: 37px;
-  padding: 16px 14px 22px 14px;
+  
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: ${({ isDateSelected }) => (isDateSelected ? '#FFEED2' : '#F1F1F1')};
 
-  border-radius: 10px;
+  font-family: 'Roboto', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 20px;
+  text-align: center;
+  
+  background-color: ${({ isDateSelected }) => (isDateSelected ? '#FFD37D' : '#F1F1F1')};
+
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.25);
+
+  border-radius: 4px;
   border: none;
 
   margin: 20px 0 20px 20px;
+  padding: 10px;
 
   :first-child {
     margin-left: 0;
