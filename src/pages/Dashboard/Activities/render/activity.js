@@ -224,6 +224,7 @@ export function Activity({ dateInfo }) {
                     display: 'flex',
                     padding: '12px',
                     justifyContent: 'space-around',
+                    flexShrink: 0,
                     color: 'black',
                   }}
                 >
@@ -282,6 +283,7 @@ export function Activity({ dateInfo }) {
                     display: 'flex',
                     padding: '12px',
                     justifyContent: 'space-around',
+                    flexShrink: 0,
                     color: 'black',
                   }}
                 >
@@ -340,6 +342,7 @@ export function Activity({ dateInfo }) {
                     display: 'flex',
                     padding: '12px',
                     justifyContent: 'space-around',
+                    flexShrink: 0,
                     color: 'black',
                   }}
                 >

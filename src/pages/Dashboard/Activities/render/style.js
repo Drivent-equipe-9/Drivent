@@ -129,7 +129,7 @@ const Container = styled.div`
 const ContainerActivitiesLeft = styled.div`
   width: 100%;
   min-width: 300px;
-  height: 350px;
+  //height: 350px;
 
   border-top: 1px solid #d7d7d7;
   border-bottom: 1px solid #d7d7d7;
@@ -137,15 +137,18 @@ const ContainerActivitiesLeft = styled.div`
   
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   flex-flow: column;
 
   overflow: auto;
+  *::-webkit-scrollbar-thumb {   
+   background-color: darkgrey; 
+  }
+
 `;
 const ContainerActivitiesRight = styled.div`
   width: 100%;
   min-width: 300px;
-  height: 350px;
+  //height: 350px;
 
   border-top: 1px solid #d7d7d7;
   border-bottom: 1px solid #d7d7d7;
@@ -153,25 +156,31 @@ const ContainerActivitiesRight = styled.div`
 
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   flex-flow: column;
 
   overflow: auto;
+  *::-webkit-scrollbar-thumb {   
+   background-color: darkgrey; 
+  }
+
 
 `;
 const ContainerActivitiesCenter = styled.div`
   width: 100%;
   min-width: 300px;
-  height: 350px;
+  //height: 350px;
 
   border: 1px solid #d7d7d7;
 
   display: flex;
   flex-direction: column;
-  flex-wrap: wrap;
   flex-flow: column;
 
   overflow: auto ;
+  *::-webkit-scrollbar-thumb {   
+   background-color: darkgrey; 
+  }
+
 `;
 
 const Info = styled.div`
@@ -255,6 +264,7 @@ const BoxDiv = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+
   h1 {
     color: #7b7b7b;
     margin-bottom: 13px;
