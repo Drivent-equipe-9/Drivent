@@ -9,20 +9,23 @@ import {
   Info,
   InfoButton,
   BoxDiv,
+  Separation
 } from './style';
 import { getActivitiesByDate } from '../../../../services/activitiesApi';
 import { toast } from 'react-toastify';
 import useToken from '../../../../hooks/useToken';
 
-import { useEffect, useState } from 'react';
-
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { Box } from '@material-ui/core';
+import { IoLogInOutline, IoCloseCircleOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
 
 export function Activity({ dateInfo }) {
   const token = useToken();
   const navigate = useNavigate();
 
+  const [isregister, setIsRegister] = useState(false);
   const [isDateSelected, setDateSelected] = useState(false);
   const [arrayPrincipal, setArrayPrincipal] = useState([]);
   const [arrayLateral, setArrayLateral] = useState([]);
@@ -180,6 +183,10 @@ export function Activity({ dateInfo }) {
 
   function handleActivitySelection(a) { }
 
+  function register() {
+    setIsRegister(true);
+  }
+
   return (
     <>
       <InfoText isSelected={isDateSelected}>Primeiro, filtre pelo dia do evento: </InfoText>
@@ -206,16 +213,17 @@ export function Activity({ dateInfo }) {
                   sx={{
                     marginTop: `${a.margin}px`,
                     height: `${a.size}px`,
-                    width: '265px',
+                    width: '275px',
                     marginLeft: '12px',
                     marginRight: '12px',
+                    marginBottom: '12px',
                     border: '1px solid #cecece',
                     borderRadius: '5px',
                     backgroundColor: '#f1f1f1',
                     flexDirection: 'row',
                     display: 'flex',
                     padding: '12px',
-                    justifyContent: 'space-between',
+                    justifyContent: 'space-around',
                     color: 'black',
                   }}
                 >
@@ -225,7 +233,26 @@ export function Activity({ dateInfo }) {
                       {a.startsAt} - {a.endsAt}
                     </h3>
                   </Info>
-                  <InfoButton>{a.vacancies === '0' ? <h4>Esgotado</h4> : <h4>{a.vacancies} vagas</h4>}</InfoButton>
+                  <Separation />
+                  <InfoButton onClick={register}> 
+                    {a.vacancies === 0 ? 
+                      <>
+                        <IoCloseCircleOutline color='red' size={30}/>
+                        <h5>Esgotado</h5> 
+                      </>
+                      : 
+                      isregister ?
+                        <>
+                          <IoCheckmarkCircleOutline color='green' size={30}/>
+                          <h4>inscrito</h4>
+                        </>
+                        :
+                        <>
+                          <IoLogInOutline color='green' size={30}/>
+                          <h4>{a.vacancies} vagas</h4>
+                        </>
+                    }
+                  </InfoButton>
                 </Box>
               ))}
             </ContainerActivitiesLeft>
@@ -244,16 +271,17 @@ export function Activity({ dateInfo }) {
                   sx={{
                     marginTop: `${a.margin}px`,
                     height: `${a.size}px`,
-                    width: '265px',
+                    width: '280px',
                     marginLeft: '12px',
                     marginRight: '12px',
+                    marginBottom: '12px',
                     border: '1px solid #cecece',
                     borderRadius: '5px',
                     backgroundColor: '#f1f1f1',
                     flexDirection: 'row',
                     display: 'flex',
                     padding: '12px',
-                    justifyContent: 'space-between',
+                    justifyContent: 'space-around',
                     color: 'black',
                   }}
                 >
@@ -263,7 +291,26 @@ export function Activity({ dateInfo }) {
                       {a.startsAt} - {a.endsAt}
                     </h3>
                   </Info>
-                  <InfoButton>{a.vacancies === '0' ? <h4>Esgotado</h4> : <h4>{a.vacancies} vagas</h4>}</InfoButton>
+                  <Separation />
+                  <InfoButton onClick={register}>
+                    {a.vacancies === 0 ? 
+                      <>
+                        <IoCloseCircleOutline color='red' size={30}/>
+                        <h5>Esgotado</h5> 
+                      </>
+                      : 
+                      isregister ?
+                        <>
+                          <IoCheckmarkCircleOutline color='green' size={30}/>
+                          <h4>inscrito</h4>
+                        </>
+                        :
+                        <>
+                          <IoLogInOutline color='green' size={30}/>
+                          <h4>{a.vacancies} vagas</h4>
+                        </>
+                    }
+                  </InfoButton>
                 </Box>
               ))}
             </ContainerActivitiesCenter>
@@ -282,16 +329,17 @@ export function Activity({ dateInfo }) {
                   sx={{
                     marginTop: `${a.margin}px`,
                     height: `${a.size}px`,
-                    width: '265px',
+                    width: '285px',
                     marginLeft: '12px',
                     marginRight: '12px',
+                    marginBottom: '12px',
                     border: '1px solid #cecece',
                     borderRadius: '5px',
                     backgroundColor: '#f1f1f1',
                     flexDirection: 'row',
                     display: 'flex',
                     padding: '12px',
-                    justifyContent: 'space-between',
+                    justifyContent: 'space-around',
                     color: 'black',
                   }}
                 >
@@ -301,7 +349,26 @@ export function Activity({ dateInfo }) {
                       {a.startsAt} - {a.endsAt}
                     </h3>
                   </Info>
-                  <InfoButton>{a.vacancies === '0' ? <h4>Esgotado</h4> : <h4>{a.vacancies} vagas</h4>}</InfoButton>
+                  <Separation />
+                  <InfoButton onClick={register}>
+                    {a.vacancies === 0 ? 
+                      <>
+                        <IoCloseCircleOutline color='red' size={30}/>
+                        <h5>Esgotado</h5> 
+                      </>
+                      : 
+                      isregister ?
+                        <>
+                          <IoCheckmarkCircleOutline color='green' size={30}/>
+                          <h4>inscrito</h4>
+                        </>
+                        :
+                        <>
+                          <IoLogInOutline color='green' size={30}/>
+                          <h4>{a.vacancies} vagas</h4>
+                        </>
+                    }
+                  </InfoButton>
                 </Box>
               ))}
             </ContainerActivitiesRight>

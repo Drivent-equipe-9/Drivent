@@ -67,7 +67,7 @@ const Option = styled.button`
   }
 
   h2 {
-    font-family: Roboto;
+    font-family: 'Roboto';
     font-size: 20px;
     font-weight: 400;
     line-height: 23px;
@@ -80,7 +80,7 @@ const Option = styled.button`
   }
 
   h3 {
-    font-family: Roboto;
+    font-family: 'Roboto';
     font-size: 12px;
     font-weight: 700;
     line-height: 14px;
@@ -91,7 +91,7 @@ const Option = styled.button`
   }
 
   p {
-    font-family: Roboto;
+    font-family: 'Roboto';
     font-size: 12px;
     font-weight: 400;
     line-height: 14px;
@@ -128,36 +128,50 @@ const Container = styled.div`
 
 const ContainerActivitiesLeft = styled.div`
   width: 100%;
-  height: 795px;
+  min-width: 300px;
+  height: 350px;
+
   border-top: 1px solid #d7d7d7;
   border-bottom: 1px solid #d7d7d7;
   border-left: 1px solid #d7d7d7;
-  min-width: 300px;
+  
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
+  flex-flow: column;
+
+  overflow: auto;
 `;
 const ContainerActivitiesRight = styled.div`
   width: 100%;
-  height: 795px;
   min-width: 300px;
+  height: 350px;
+
   border-top: 1px solid #d7d7d7;
   border-bottom: 1px solid #d7d7d7;
   border-right: 1px solid #d7d7d7;
 
-  flex-direction: column;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
+  flex-flow: column;
+
+  overflow: auto;
+
 `;
 const ContainerActivitiesCenter = styled.div`
   width: 100%;
   min-width: 300px;
-  height: 795px;
+  height: 350px;
+
   border: 1px solid #d7d7d7;
 
-  flex-direction: column;
   display: flex;
+  flex-direction: column;
   flex-wrap: wrap;
+  flex-flow: column;
+
+  overflow: auto ;
 `;
 
 const Info = styled.div`
@@ -166,10 +180,40 @@ const Info = styled.div`
   gap: 6px;
 `;
 
+const Separation = styled.div`
+  border-right: 1px solid #cfcfcf;
+`;
+
 const InfoButton = styled.button`
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  
   border: none;
+
+  h4 {
+    color: #078632;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 15px;
+    text-align: center;
+    margin-left: 6px;
+  }
+
+  h5 {
+    color: #CC6666;
+
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 10px;
+    line-height: 15px;
+    text-align: center;
+  }
 `;
 
 const Activity = styled.div`
@@ -230,4 +274,5 @@ export {
   Info,
   InfoButton,
   BoxDiv,
+  Separation
 };
