@@ -156,5 +156,5 @@ export {
   InfoText,
   ContainerRoom,
   Rooms,
-  Vacancies
+  Vacancies,
 };

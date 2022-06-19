@@ -13,6 +13,7 @@ import { Hotels } from './hotels/hotels';
 import { useNavigate } from 'react-router-dom';
 import useChangeRoom from '../../../hooks/useChangeRoom';
 import { getReservation } from '../../../services/reservationApi';
+import PuffLoading from '../../../components/PuffLoading';
 
 export default function Hotel() {
   const token = useToken();
@@ -22,6 +23,8 @@ export default function Hotel() {
   const [hasAccomodation, setAccomodation] = useState(false);
   const [isPaid, setPaid] = useState(false);
   const [hotels, setHotels] = useState([]);
+
+  const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
     const promise = getReservation(token);
@@ -68,25 +71,26 @@ export default function Hotel() {
         setPaid(false);
       });
 
-    const promiseHotel = getHotelInfo(token);
-    promiseHotel
-      .then((responseHotel) => {
-        let arrayHotel = responseHotel;
-
-        for (let i = 0; i < responseHotel.length; i++) {
-          let promise = getTotalVacanciesByHotelId(responseHotel[i].id, token);
-          promise.then((vacancies) => {
-            arrayHotel[i].vacanciesLeft = vacancies.vacanciesLeft;
-            setHotels(arrayHotel);
-          }).catch(() => {
-            toast('Não foi possível carregar as vagas restantes!');
-          });
-        }
-      })
-      .catch(() => {
-        toast('Não foi possível carregar as informações dos hoteis!');
-      });
+    renderHotel();
   }, []);
+
+  async function renderHotel() {
+    try {
+      const promiseHotel = await getHotelInfo(token);
+
+      let arrayHotel = promiseHotel;
+
+      for (let i = 0; i < promiseHotel.length; i++) {
+        let promise = await getTotalVacanciesByHotelId(promiseHotel[i].id, token);
+        arrayHotel[i].vacanciesLeft = promise.vacanciesLeft;
+        setHotels(arrayHotel);
+      }
+    } catch {
+      toast('Não foi possível carregar as informações dos hoteis!');
+    }
+
+    setLoading(false);
+  }
 
   return (
     <>
@@ -106,7 +110,10 @@ export default function Hotel() {
             </EmptyInfoText>
           </ContainerEmptyInfo>
           :
-          <Hotels hotelInfo={hotels} setHotels={setHotels} setChangeRoom={setChangeRoom} />
+          isLoading ?
+            <PuffLoading>Loading</PuffLoading>
+            :
+            <Hotels hotelInfo={hotels} setHotels={setHotels} setChangeRoom={setChangeRoom} />
       }
     </>
   );

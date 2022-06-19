@@ -28,6 +28,8 @@ const Container = styled.div`
   width: 100%;
   overflow-y: auto;
 
+  margin-right: -15px;
+
   @media (max-width: 600px) {
     height: calc(100vh - 80px);
     padding: 20px;
