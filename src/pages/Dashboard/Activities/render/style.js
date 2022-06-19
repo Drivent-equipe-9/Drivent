@@ -129,7 +129,7 @@ const Container = styled.div`
 const ContainerActivitiesLeft = styled.div`
   width: 100%;
   min-width: 300px;
-  //height: 350px;
+  height: 350px;
 
   border-top: 1px solid #d7d7d7;
   border-bottom: 1px solid #d7d7d7;
@@ -148,7 +148,7 @@ const ContainerActivitiesLeft = styled.div`
 const ContainerActivitiesRight = styled.div`
   width: 100%;
   min-width: 300px;
-  //height: 350px;
+  height: 350px;
 
   border-top: 1px solid #d7d7d7;
   border-bottom: 1px solid #d7d7d7;
@@ -168,7 +168,7 @@ const ContainerActivitiesRight = styled.div`
 const ContainerActivitiesCenter = styled.div`
   width: 100%;
   min-width: 300px;
-  //height: 350px;
+  height: 350px;
 
   border: 1px solid #d7d7d7;
 
