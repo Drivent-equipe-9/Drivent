@@ -228,7 +228,7 @@ const Info = styled.div`
 `;
 
 const Separation = styled.div`
-  border-right: 1px solid #cfcfcf;
+  border-right: ${({ arrayRegister }) => arrayRegister === 1 ? '1px solid #99E8A1' : '1px solid #cfcfcf'};
 `;
 
 const InfoButton = styled.button`
@@ -236,7 +236,7 @@ const InfoButton = styled.button`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  
+  background-color: ${({ arrayRegister }) => arrayRegister === 1 ? '#D0FFDB' : 'none'};
   border: none;
 
   h4 {
