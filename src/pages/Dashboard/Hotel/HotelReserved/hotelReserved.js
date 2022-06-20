@@ -32,11 +32,21 @@ export default function HotelReserved() {
       setReservation(promiseReserve);
 
       if (promiseReserve.Room.accomodationType === 'Single') setPeople('Somente você');
-      if (promiseReserve.Room.accomodationType === 'Double' && promiseReserve.Room.vacanciesLeft === 1) setPeople('Somente você');
-      if (promiseReserve.Room.accomodationType === 'Double' && promiseReserve.Room.vacanciesLeft === 0) setPeople('Você e mais 1');
-      if (promiseReserve.Room.accomodationType === 'Triple' && promiseReserve.Room.vacanciesLeft === 2) setPeople('Somente você');
-      if (promiseReserve.Room.accomodationType === 'Triple' && promiseReserve.Room.vacanciesLeft === 1) setPeople('Você e mais 1');
-      if (promiseReserve.Room.accomodationType === 'Triple' && promiseReserve.Room.vacanciesLeft === 0) setPeople('Você e mais 2');
+
+      if (promiseReserve.Room.accomodationType === 'Double'
+        && promiseReserve.Room.vacanciesLeft === 1) setPeople('Somente você');
+
+      if (promiseReserve.Room.accomodationType === 'Double'
+        && promiseReserve.Room.vacanciesLeft === 0) setPeople('Você e mais 1');
+
+      if (promiseReserve.Room.accomodationType === 'Triple'
+        && promiseReserve.Room.vacanciesLeft === 2) setPeople('Somente você');
+
+      if (promiseReserve.Room.accomodationType === 'Triple'
+        && promiseReserve.Room.vacanciesLeft === 1) setPeople('Você e mais 1');
+
+      if (promiseReserve.Room.accomodationType === 'Triple'
+        && promiseReserve.Room.vacanciesLeft === 0) setPeople('Você e mais 2');
 
       setLoading(false);
     } catch {
