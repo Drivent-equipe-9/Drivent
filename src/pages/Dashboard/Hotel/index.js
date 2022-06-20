@@ -36,15 +36,14 @@ export default function Hotel() {
       if (promiseReserve && !changeRoom) {
         navigate('/dashboard/hotel/reservation');
       }
-    } catch (error) {
-      console.log('Faça sua reserva.');
+    } catch {
+
     }
 
     try {
       const promiseEnroll = await getPersonalInformations(token);
 
       const promiseTicket = await findTicket(token, promiseEnroll.id);
-      console.log(promiseTicket);
       if (promiseTicket.withAccommodation) {
         setAccomodation(true);
       } else {

@@ -12,14 +12,15 @@ export function ConfirmationTicket({ formData, setConfirmedTicket }) {
   async function submit() {
     try {
       setLoading(true);
-      console.log(formData);
       await saveTicket(token, formData);
       setLoading(false);
+
       toast.success('Ticket reservado com sucesso!');
       setConfirmedTicket(true);
     } catch {
       setConfirmedTicket(false);
       setLoading(false);
+      
       toast.error('Algo deu errado, tente novamente.');
     }
   }

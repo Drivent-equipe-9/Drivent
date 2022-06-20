@@ -71,41 +71,41 @@ export default function HotelReserved() {
           {!isLoading ?
             <img src={reservation?.Hotel.imageUrl} alt={reservation?.Hotel.name}></img>
             :
-            <Skeleton animation="wave" variant='rectangular' width={168} height={109} borderRadius={5} />
+            <Skeleton animation="wave" variant='rectangular' width={168} height={109} />
           }
           {!isLoading ?
             <h2>{reservation?.Hotel.name}</h2>
             :
-            <Box sx={{ width: '100%', mt: '10px', mb: '10px', borderRadius: 5 }}>
-              <Skeleton animation="wave" variant='rectangular' width='100%' height={23} margin />
+            <Box sx={{ width: '100%', mt: '10px', mb: '10px' }}>
+              <Skeleton animation="wave" variant='rectangular' width='100%' height={23} />
             </Box>
           }
           {!isLoading ?
             <h3>Quarto reservado</h3>
             :
-            <Box sx={{ width: '100%', mt: '14px', borderRadius: 5 }}>
-              <Skeleton animation="wave" variant='rectangular' width='100%' height={14} margin />
+            <Box sx={{ width: '100%', mt: '14px' }}>
+              <Skeleton animation="wave" variant='rectangular' width='100%' height={14} />
             </Box>
           }
           {!isLoading ?
             <p>{reservation?.Room.number} ({reservation?.Room.accomodationType})</p>
             :
-            <Box sx={{ width: '100%', mt: '3px', borderRadius: 5 }}>
-              <Skeleton animation="wave" variant='rectangular' width='100%' height={14} margin />
+            <Box sx={{ width: '100%', mt: '3px' }}>
+              <Skeleton animation="wave" variant='rectangular' width='100%' height={14} />
             </Box>
           }
           {!isLoading ?
             <h3>Pessoas no seu quarto</h3>
             :
-            <Box sx={{ width: '100%', mt: '14px', borderRadius: 5 }}>
-              <Skeleton animation="wave" variant='rectangular' width='100%' height={14} margin />
+            <Box sx={{ width: '100%', mt: '14px' }}>
+              <Skeleton animation="wave" variant='rectangular' width='100%' height={14} />
             </Box>
           }
           {!isLoading ?
             <p>{people}</p>
             :
             <Box sx={{ width: '100%', mt: '3px', borderRadius: '5px' }}>
-              <Skeleton animation="wave" variant='rectangular' width='100%' height={14} margin />
+              <Skeleton animation="wave" variant='rectangular' width='100%' height={14} />
             </Box>
           }
         </Option>
