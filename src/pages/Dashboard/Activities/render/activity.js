@@ -11,28 +11,28 @@ import {
   BoxDiv,
   Separation
 } from './style';
-import { getActivitiesByDate } from '../../../../services/activitiesApi';
+import { getActivitiesByDate, register } from '../../../../services/activitiesApi';
 import { toast } from 'react-toastify';
 import useToken from '../../../../hooks/useToken';
 
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { Box } from '@material-ui/core';
 import { IoLogInOutline, IoCloseCircleOutline, IoCheckmarkCircleOutline } from 'react-icons/io5';
 
 export function Activity({ dateInfo }) {
   const token = useToken();
-  const navigate = useNavigate();
 
-  const [isregister, setIsRegister] = useState(false);
   const [isDateSelected, setDateSelected] = useState(false);
+  const [registeredActivities, setRegisteredActivities] = useState();
   const [arrayPrincipal, setArrayPrincipal] = useState([]);
   const [arrayLateral, setArrayLateral] = useState([]);
   const [arrayWorkshop, setArrayWorkshop] = useState([]);
   const [allActivities, setAllActivities] = useState([]);
+  const [dateData, setDateData] = useState();
 
   function handleDateChange(d) {
+    setDateData(d);
     renderDate(d);
 
     let newPrincipal = [];
@@ -42,6 +42,9 @@ export function Activity({ dateInfo }) {
     const promiseActivity = getActivitiesByDate(d.originalDate, token);
     promiseActivity
       .then((response) => {
+        let activitiesUser = response.filter((act) => act.ActivityUser.length > 0 );
+        setRegisteredActivities(activitiesUser);
+
         setAllActivities(response);
         for (let i = 0; i < response.length; i++) {
           response[i].isSelected = false;
@@ -181,10 +184,54 @@ export function Activity({ dateInfo }) {
     setArrayWorkshop(newArray);
   }
 
-  function handleActivitySelection(a) { }
+  async function handleClickActivity(id, thisActivity) {
+    if(thisActivity.ActivityUser?.length === 1) {
+      toast('Você já está inscrito nesta atividade.');
+      return;
+    } 
 
-  function register() {
-    setIsRegister(true);
+    if(thisActivity.vacancies === 0) {
+      toast.error('Não há vagas.');
+      return;
+    }
+    verifyTimeConflict(thisActivity, id);
+  }
+
+  async function verifyTimeConflict(activity, id) {
+    if( registeredActivities.length === 0 ) {
+      registerActivity(id, activity);
+      return;
+    } else {
+      for( let i = 0; i < registeredActivities.length; i++ ) {
+        let initDateRegistered = registeredActivities[i].startsAt;
+        let endDateRegistered = registeredActivities[i].endsAt;
+
+        let initDateThisActivity = activity.startsAt;
+        let endDateThisActivity = activity.endsAt;
+        
+        if (initDateThisActivity === initDateRegistered ||
+            (initDateThisActivity > initDateRegistered && initDateThisActivity < endDateRegistered) ||
+            (endDateThisActivity > initDateRegistered && endDateThisActivity < endDateRegistered) ||
+            endDateThisActivity === endDateRegistered) {
+          toast('Você já possui uma atividade nesse horário.');
+          return;
+        }
+      }
+    }
+    
+    registerActivity(id, activity);
+  }
+
+  function registerActivity(id, activity) {
+    const promise = register(id, token);
+    promise
+      .then(() => {
+        handleDateChange(dateData);
+        toast('Inscrito com sucesso!');
+      })
+      .catch((error) => {
+        toast('Falha ao se inscrever. Tente novamente.');
+      });
   }
 
   return (
@@ -207,7 +254,6 @@ export function Activity({ dateInfo }) {
                   key={a.id}
                   id={a.id}
                   disabled={!a.vacancies}
-                  onClick={() => handleActivitySelection(a)}
                   isActivityFull={!a.vacancies}
                   isRoomSelected={a.isSelected}
                   sx={{
@@ -217,9 +263,8 @@ export function Activity({ dateInfo }) {
                     marginLeft: '12px',
                     marginRight: '12px',
                     marginBottom: '12px',
-                    border: '1px solid #cecece',
                     borderRadius: '5px',
-                    backgroundColor: '#f1f1f1',
+                    backgroundColor: a.ActivityUser.length === 1 ? '#D0FFDB' : '#f1f1f1',
                     flexDirection: 'row',
                     display: 'flex',
                     padding: '12px',
@@ -231,25 +276,25 @@ export function Activity({ dateInfo }) {
                   <Info>
                     <h2>{a.name}</h2>
                     <h3>
-                      {a.startsAt} - {a.endsAt}
+                      {a.startsAt}:00 - {a.endsAt}:00
                     </h3>
                   </Info>
-                  <Separation />
-                  <InfoButton onClick={register}> 
+                  <Separation arrayRegister={a.ActivityUser.length} />
+                  <InfoButton arrayRegister={a.ActivityUser.length} onClick={() => handleClickActivity(a.id, a)}> 
                     {a.vacancies === 0 ? 
                       <>
-                        <IoCloseCircleOutline color='red' size={30}/>
+                        <IoCloseCircleOutline color='#CC6666' size={30}/>
                         <h5>Esgotado</h5> 
                       </>
                       : 
-                      isregister ?
+                      a.ActivityUser.length === 1 ?
                         <>
-                          <IoCheckmarkCircleOutline color='green' size={30}/>
+                          <IoCheckmarkCircleOutline color='#078632' size={30}/>
                           <h4>inscrito</h4>
                         </>
                         :
                         <>
-                          <IoLogInOutline color='green' size={30}/>
+                          <IoLogInOutline color='#078632' size={30}/>
                           <h4>{a.vacancies} vagas</h4>
                         </>
                     }
@@ -266,7 +311,6 @@ export function Activity({ dateInfo }) {
                   key={a.id}
                   id={a.id}
                   disabled={!a.vacancies}
-                  onClick={() => handleActivitySelection(a)}
                   isActivityFull={!a.vacancies}
                   isRoomSelected={a.isSelected}
                   sx={{
@@ -276,9 +320,8 @@ export function Activity({ dateInfo }) {
                     marginLeft: '12px',
                     marginRight: '12px',
                     marginBottom: '12px',
-                    border: '1px solid #cecece',
                     borderRadius: '5px',
-                    backgroundColor: '#f1f1f1',
+                    backgroundColor: a.ActivityUser.length === 1 ? '#D0FFDB' : '#f1f1f1',
                     flexDirection: 'row',
                     display: 'flex',
                     padding: '12px',
@@ -290,25 +333,25 @@ export function Activity({ dateInfo }) {
                   <Info>
                     <h2>{a.name}</h2>
                     <h3>
-                      {a.startsAt} - {a.endsAt}
+                      {a.startsAt}:00 - {a.endsAt}:00
                     </h3>
                   </Info>
-                  <Separation />
-                  <InfoButton onClick={register}>
+                  <Separation arrayRegister={a.ActivityUser.length} />
+                  <InfoButton arrayRegister={a.ActivityUser.length} onClick={() => handleClickActivity(a.id, a)}>
                     {a.vacancies === 0 ? 
                       <>
-                        <IoCloseCircleOutline color='red' size={30}/>
+                        <IoCloseCircleOutline color='#CC6666' size={30}/>
                         <h5>Esgotado</h5> 
                       </>
                       : 
-                      isregister ?
+                      a.ActivityUser.length === 1 ?
                         <>
-                          <IoCheckmarkCircleOutline color='green' size={30}/>
+                          <IoCheckmarkCircleOutline color='#078632' size={30}/>
                           <h4>inscrito</h4>
                         </>
                         :
                         <>
-                          <IoLogInOutline color='green' size={30}/>
+                          <IoLogInOutline color='#078632' size={30}/>
                           <h4>{a.vacancies} vagas</h4>
                         </>
                     }
@@ -325,7 +368,6 @@ export function Activity({ dateInfo }) {
                   key={a.id}
                   id={a.id}
                   disabled={!a.vacancies}
-                  onClick={() => handleActivitySelection(a)}
                   isActivityFull={!a.vacancies}
                   isRoomSelected={a.isSelected}
                   sx={{
@@ -335,9 +377,8 @@ export function Activity({ dateInfo }) {
                     marginLeft: '12px',
                     marginRight: '12px',
                     marginBottom: '12px',
-                    border: '1px solid #cecece',
                     borderRadius: '5px',
-                    backgroundColor: '#f1f1f1',
+                    backgroundColor: a.ActivityUser.length === 1 ? '#D0FFDB' : '#f1f1f1',
                     flexDirection: 'row',
                     display: 'flex',
                     padding: '12px',
@@ -349,25 +390,25 @@ export function Activity({ dateInfo }) {
                   <Info>
                     <h2>{a.name}</h2>
                     <h3>
-                      {a.startsAt} - {a.endsAt}
+                      {a.startsAt}:00 - {a.endsAt}:00
                     </h3>
                   </Info>
-                  <Separation />
-                  <InfoButton onClick={register}>
+                  <Separation arrayRegister={a.ActivityUser.length} />
+                  <InfoButton arrayRegister={a.ActivityUser.length} onClick={() => handleClickActivity(a.id, a)}>
                     {a.vacancies === 0 ? 
                       <>
-                        <IoCloseCircleOutline color='red' size={30}/>
+                        <IoCloseCircleOutline color='#CC6666' size={30}/>
                         <h5>Esgotado</h5> 
                       </>
                       : 
-                      isregister ?
+                      a.ActivityUser.length === 1 ?
                         <>
-                          <IoCheckmarkCircleOutline color='green' size={30}/>
+                          <IoCheckmarkCircleOutline color='#078632' size={30}/>
                           <h4>inscrito</h4>
                         </>
                         :
                         <>
-                          <IoLogInOutline color='green' size={30}/>
+                          <IoLogInOutline color='#078632' size={30}/>
                           <h4>{a.vacancies} vagas</h4>
                         </>
                     }
