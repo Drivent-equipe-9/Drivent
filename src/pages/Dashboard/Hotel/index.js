@@ -27,6 +27,7 @@ export default function Hotel() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
+    handleDatabaseCalls();
     const promise = getReservation(token);
     promise
       .then((reservation) => {
@@ -73,6 +74,18 @@ export default function Hotel() {
 
     renderHotel();
   }, []);
+
+  async function handleDatabaseCalls() {
+    try {
+      const promiseReservation = getReservation(token);
+      if (promiseReservation.reservation && !changeRoom) {
+        navigate('/dashboard/hotel/reservation');
+        return;
+      }
+    } catch {
+
+    }
+  }
 
   async function renderHotel() {
     try {

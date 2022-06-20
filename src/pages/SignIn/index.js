@@ -32,10 +32,10 @@ export default function SignIn() {
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
     console.log(urlParams);
-    
+
     const code = urlParams.get('code');
     console.log(code);
-    if( code ) {
+    if (code) {
       axios.post('http://localhost:4000/oauth/github/login', { code })
         .then((res) => {
           console.log(res);
@@ -44,12 +44,12 @@ export default function SignIn() {
         })
         .catch((e) => {
           console.log(e);
-          toast('Por favor, deixe seu e-mail do GitHub público!');
+          toast.error('Por favor, deixe seu e-mail do GitHub público!');
           navigate('/sign-in');
         });
     }
   }, []);
-  
+
   async function submit(event) {
     event.preventDefault();
 
@@ -61,7 +61,7 @@ export default function SignIn() {
     } catch (err) {
       toast('Não foi possível fazer o login!');
     }
-  } 
+  }
 
   return (
     <AuthLayout background={eventInfo.backgroundImageUrl}>

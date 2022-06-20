@@ -1,4 +1,6 @@
+import * as React from 'react';
 import { Container, InfoText, Summary } from './style';
+import { Container as MUIContainer, Skeleton } from '@mui/material';
 
 export function TicketSummary({ ticketData }) {
   let ticketType = '';
@@ -13,16 +15,25 @@ export function TicketSummary({ ticketData }) {
     ticketType = 'Online';
   }
 
-  return(
+  return (
     <>
       <InfoText>
-       Ingresso escolhido
+        Ingresso escolhido
       </InfoText>
 
       <Container>
         <Summary >
-          <p>{ticketType}</p>
-          <span>{`R$ ${ticketData.totalPrice}`}</span>
+          {ticketData.totalPrice === undefined ?
+            <MUIContainer sx={{ width: '60%' }}>
+              <Skeleton animation="wave" />
+              <Skeleton animation="wave" />
+            </MUIContainer>
+            :
+            <>
+              <p>{ticketType}</p>
+              <span>{`R$ ${ticketData.totalPrice}`}</span>
+            </>
+          }
         </Summary>
       </Container>
     </>
