@@ -1,16 +1,22 @@
 import styled from 'styled-components';
 
 const ContainerDate = styled.div`
+  width: 100%;
+
   display: flex;
   align-items: center;
   justify-content: flex-start;
+
   background-color: white;
-  width: 100%;
+
   margin-bottom: 60px;
   margin-top: 28px;
 
   @media (max-width: 840px) {
     flex-direction: column;
+    align-items: flex-start;
+
+    margin-bottom: 0;
   }
 `;
 
@@ -115,15 +121,22 @@ const Option = styled.button`
 
   @media (max-width: 840px) {
     margin-left: 0;
+    margin-top: 0;
   }
 `;
 
 const Container = styled.div`
   width: 100%;
+
   background-color: white;
+
   display: flex;
   flex-direction: row;
   justify-content: center;
+
+  @media (max-width: 840px) {
+    flex-direction: column;
+  }
 `;
 
 const ContainerActivitiesLeft = styled.div`
@@ -140,8 +153,18 @@ const ContainerActivitiesLeft = styled.div`
   flex-flow: column;
 
   overflow: auto;
-  *::-webkit-scrollbar-thumb {   
-   background-color: darkgrey; 
+  ::-webkit-scrollbar {
+    width: 1px;
+    height: 0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: gray;
+  }
+
+  @media (max-width: 840px) {
+    width: 90%;
+
+    border-right: 1px solid #d7d7d7;
   }
 
 `;
@@ -159,11 +182,19 @@ const ContainerActivitiesRight = styled.div`
   flex-flow: column;
 
   overflow: auto;
-  *::-webkit-scrollbar-thumb {   
-   background-color: darkgrey; 
+  ::-webkit-scrollbar {
+    width: 1px;
+    height: 0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: gray;
   }
 
+  @media (max-width: 840px) {
+    width: 93%;
 
+    border-left: 1px solid #d7d7d7;
+  }
 `;
 const ContainerActivitiesCenter = styled.div`
   width: 100%;
@@ -177,10 +208,17 @@ const ContainerActivitiesCenter = styled.div`
   flex-flow: column;
 
   overflow: auto ;
-  *::-webkit-scrollbar-thumb {   
-   background-color: darkgrey; 
+  ::-webkit-scrollbar {
+    width: 1px;
+    height: 0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: gray;
   }
 
+  @media (max-width: 840px) {
+    width: 92%;
+  }
 `;
 
 const Info = styled.div`
@@ -265,9 +303,21 @@ const BoxDiv = styled.div`
   align-items: center;
   flex-direction: column;
 
+  :last-child{
+    margin-right: 10px;
+  }
+
   h1 {
     color: #7b7b7b;
     margin-bottom: 13px;
+  }
+
+  @media (max-width: 840px) {
+    h1 {
+      margin-top: 20px;
+    }
+
+    align-items: flex-start;
   }
 `;
 
