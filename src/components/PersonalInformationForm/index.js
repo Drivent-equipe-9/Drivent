@@ -23,6 +23,7 @@ import { InputWrapper } from './InputWrapper';
 import { ErrorMsg } from './ErrorMsg';
 import { ufList } from './ufList';
 import FormValidations from './FormValidations';
+import useChangeRoom from '../../hooks/useChangeRoom';
 
 dayjs.extend(CustomParseFormat);
 
@@ -31,6 +32,7 @@ export default function PersonalInformationForm() {
   const { getCep } = useCep();
   const { enrollment } = useEnrollment();
   const { saveEnrollmentLoading, saveEnrollment } = useSaveEnrollment();
+  const { setChangeRoom } = useChangeRoom();
 
   const {
     handleSubmit,
@@ -83,6 +85,7 @@ export default function PersonalInformationForm() {
   });
 
   useEffect(() => {
+    setChangeRoom(false);
     if (enrollment) {
       setData({
         name: enrollment.name,

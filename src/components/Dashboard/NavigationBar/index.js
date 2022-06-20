@@ -15,7 +15,10 @@ import NavigationButton from './NavigationButton';
 export default function NavigationBar() {
   const location = useLocation();
 
-  function isActive(buttonPath) {
+  function isActive(buttonPath, secondPath) {
+    if (secondPath) {
+      if (location.pathname === secondPath) return true;
+    }
     return location.pathname === buttonPath;
   }
 
@@ -36,7 +39,7 @@ export default function NavigationBar() {
       </Link>
 
       <Link to="/dashboard/hotel">
-        <NavigationButton active={isActive('/dashboard/hotel')}>
+        <NavigationButton active={isActive('/dashboard/hotel', '/dashboard/hotel/reservation')}>
           <FaBed />
           <span>Hotel</span>
         </NavigationButton>

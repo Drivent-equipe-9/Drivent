@@ -1,23 +1,33 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-    width: 100%;
+  width: 100%;
 
 `;
 
 const PaymentContainer = styled.div`
-    width: 100%;
-    
-    display: grid;
-    grid-template-columns: auto auto;
-    justify-content: flex-start;
-    align-items: center;
+  width: 100%;
+  
+  display: grid;
+  grid-template-columns: auto auto;
+  justify-content: flex-start;
+  align-items: center;
 
-    margin-top: 20px;
+  gap: 2vw;
+  
+  position: relative;
 
-    gap: 2vw;
-    
-    position: relative;
+  @media (max-width: 840px) {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+
+    margin: 10px 0 40px 0;
+
+    .rccs {
+      margin: 0;
+    }
+  }
 `;
 
 const Form = styled.form`
@@ -25,8 +35,15 @@ const Form = styled.form`
     
     display: flex;
     flex-direction: column;
+
+    padding-top: 20px;
     
     gap: 12px;
+
+    @media (max-width: 840px) {
+      gap: 0;
+  }
+  
 `;
 
 const ThirdLine = styled.div`
@@ -43,7 +60,7 @@ const SubmitContainer = styled.div`
 
   position: absolute;
   left: 0;
-  top: 90%;
+  top: 80%;
 
   > button {
     margin-top: 0 !important;
