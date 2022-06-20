@@ -6,6 +6,10 @@ const ContainerHotel = styled.div`
 
   @media(max-width: 840px) {
     flex-direction: column;
+
+    align-items: flex-start;
+
+    margin-bottom: 10px;
   }
 `;
 
@@ -46,7 +50,7 @@ const Option = styled.button`
   }
 
   h2 {
-    font-family: Roboto;
+    font-family: 'Roboto';
     font-size: 20px;
     font-weight: 400;
     line-height: 23px;
@@ -59,7 +63,7 @@ const Option = styled.button`
   }
 
   h3 {
-    font-family: Roboto;
+    font-family: 'Roboto';
     font-size: 12px;
     font-weight: 700;
     line-height: 14px;
@@ -70,7 +74,7 @@ const Option = styled.button`
   }
 
   p {
-    font-family: Roboto;
+    font-family: 'Roboto';
     font-size: 12px;
     font-weight: 400;
     line-height: 14px;
@@ -109,6 +113,10 @@ const ContainerRoom = styled.div`
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+
+  @media(max-width: 840px) {
+    margin-top: 15px;
+  }
 `;
 
 const Rooms = styled.button`
