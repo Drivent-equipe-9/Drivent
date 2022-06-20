@@ -23,7 +23,6 @@ import { IoLogInOutline, IoCloseCircleOutline, IoCheckmarkCircleOutline } from '
 
 export function Activity({ dateInfo }) {
   const token = useToken();
-  const navigate = useNavigate();
 
   const [isregister, setIsRegister] = useState(false);
   const [isDateSelected, setDateSelected] = useState(false);

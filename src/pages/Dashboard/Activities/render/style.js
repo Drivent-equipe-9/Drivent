@@ -153,8 +153,12 @@ const ContainerActivitiesLeft = styled.div`
   flex-flow: column;
 
   overflow: auto;
-  *::-webkit-scrollbar-thumb {   
-   background-color: darkgrey; 
+  ::-webkit-scrollbar {
+    width: 1px;
+    height: 0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: gray;
   }
 
   @media (max-width: 840px) {
@@ -178,8 +182,12 @@ const ContainerActivitiesRight = styled.div`
   flex-flow: column;
 
   overflow: auto;
-  *::-webkit-scrollbar-thumb {   
-   background-color: darkgrey; 
+  ::-webkit-scrollbar {
+    width: 1px;
+    height: 0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: gray;
   }
 
   @media (max-width: 840px) {
@@ -200,8 +208,12 @@ const ContainerActivitiesCenter = styled.div`
   flex-flow: column;
 
   overflow: auto ;
-  *::-webkit-scrollbar-thumb {   
-   background-color: darkgrey; 
+  ::-webkit-scrollbar {
+    width: 1px;
+    height: 0;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: gray;
   }
 
   @media (max-width: 840px) {
@@ -290,6 +302,10 @@ const BoxDiv = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
+
+  :last-child{
+    margin-right: 10px;
+  }
 
   h1 {
     color: #7b7b7b;
