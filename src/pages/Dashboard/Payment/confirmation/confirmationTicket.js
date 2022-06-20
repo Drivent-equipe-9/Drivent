@@ -1,22 +1,28 @@
-import { toast } from 'react-toastify';
+import { LoadingButton } from '@mui/lab';
+import { useState } from 'react';
+import { toast } from 'react-toastify'; import Button from '@mui/material/Button';
 import useToken from '../../../../hooks/useToken';
 import { saveTicket } from '../../../../services/ticketApi';
 import { Container, InfoText, Option } from './style';
 
 export function ConfirmationTicket({ formData, setConfirmedTicket }) {
   const token = useToken();
+  const [isLoading, setLoading] = useState(false);
 
-  function submit() {
-    const promise = saveTicket(token, formData);
-    promise
-      .then(() => {
-        toast('Ticket reservado com sucesso!');
-        setConfirmedTicket(true);
-      })
-      .catch(() => {
-        setConfirmedTicket(false);
-        toast('Algo deu errado, tente novamente.');
-      });
+  async function submit() {
+    try {
+      setLoading(true);
+      await saveTicket(token, formData);
+      setLoading(false);
+
+      toast.success('Ticket reservado com sucesso!');
+      setConfirmedTicket(true);
+    } catch {
+      setConfirmedTicket(false);
+      setLoading(false);
+      
+      toast.error('Algo deu errado, tente novamente.');
+    }
   }
 
   return (
@@ -24,10 +30,15 @@ export function ConfirmationTicket({ formData, setConfirmedTicket }) {
       <InfoText>
         {`Fechado! O total ficou em R$ ${formData.totalPrice}. Agora é só confirmar:`}
       </InfoText>
-
-      <Option formData={formData} onClick={submit}>
-        Reservar Ingresso
-      </Option>
+      {!isLoading ?
+        <Option onClick={submit}>
+          Reservar Ingresso
+        </Option>
+        :
+        <LoadingButton sx={{ width: '162px' }} variant='contained' loading loadingPosition="start">
+          Reservando
+        </LoadingButton>
+      }
 
     </Container>
   );

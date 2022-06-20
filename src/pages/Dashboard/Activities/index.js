@@ -24,78 +24,54 @@ export default function Activities() {
   const [isLoading, setLoading] = useState(true);
 
   useEffect(() => {
-    setLoading(true);
-    const promisePayment = findPayment(token);
-    promisePayment
-      .then((response) => {
-        if (response.isPaid) {
-          setPaid(true);
-        } else {
-          setPaid(false);
-        }
-        setLoading(false);
-      })
-      .catch(() => {
-        setPaid(false);
-        setLoading(false);
-      });
-
-    const promiseEnrollment = getPersonalInformations(token);
-    promiseEnrollment
-      .then((response) => {
-        const enrollmentData = response.id;
-
-        const promiseTicket = findTicket(token, enrollmentData);
-        promiseTicket
-          .then((response) => {
-            if (response.isOnline) {
-              setOnline(true);
-            } else {
-              setOnline(false);
-            }
-            setLoading(false);
-          })
-          .catch((error) => {
-            console.log(error);
-            setLoading(false);
-          });
-      })
-      .catch(() => {
-        setOnline(false);
-        setLoading(false);
-      });
-
-    const promiseActivity = getDatesInfo(token);
-    promiseActivity
-      .then((responseActivity) => {
-        setDates(responseActivity);
-      })
-      .catch(() => {
-        toast('Não foi possível carregar as informações das atividades!');
-      });
+    handleDatabaseCalls();
   }, []);
+
+  async function handleDatabaseCalls() {
+    try {
+      const promisePayment = await findPayment(token);
+      if (promisePayment.isPaid) setPaid(true);
+      if (!promisePayment.isPaid) setPaid(false);
+
+      const promiseEnrollment = await getPersonalInformations(token);
+      const enrollmentData = promiseEnrollment.id;
+
+      const promiseTicket = await findTicket(token, enrollmentData);
+      if (promiseTicket.isOnline) setOnline(true);
+      if (!promiseTicket.isOnline) setOnline(false);
+
+      const promiseActivity = await getDatesInfo(token);
+      setDates(promiseActivity);
+
+      setLoading(false);
+    } catch {
+      setLoading(false);
+      setPaid(false);
+      setOnline(false);
+    }
+  }
 
   return (
     <>
       <StyledTypography variant='h4'>Escolha de atividades</StyledTypography>
-      {!isPaid ?
-        <ContainerEmptyInfo>
-          <EmptyInfoText>
-            Você precisa ter confirmado pagamento antes <br />
-            de fazer a escolha de hospedagem
-          </EmptyInfoText>
-        </ContainerEmptyInfo>
+      {isLoading ?
+        <PuffLoading>Loading</PuffLoading>
         :
-        isOnline ?
+        !isPaid ?
           <ContainerEmptyInfo>
             <EmptyInfoText>
-              Sua modalidade de ingresso não necessita escolher <br />
-              atividade. Você terá acesso a todas as atividades.
+              Você precisa ter confirmado pagamento antes <br />
+              de fazer a escolha de hospedagem
             </EmptyInfoText>
           </ContainerEmptyInfo>
           :
-          isLoading ?
-            <PuffLoading>Loading</PuffLoading>
+          isOnline ?
+            <ContainerEmptyInfo>
+              <EmptyInfoText>
+                Sua modalidade de ingresso não necessita escolher <br />
+                atividade. Você terá acesso a todas as atividades.
+              </EmptyInfoText>
+            </ContainerEmptyInfo>
             :
             <Activity dateInfo={dates} setDates={setDates} />
       }

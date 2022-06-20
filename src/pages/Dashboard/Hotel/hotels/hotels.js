@@ -1,4 +1,4 @@
-import { Container, ContainerHotel, ContainerRoom, InfoText, Option, Rooms, Vacancies } from './style';
+import { Container, ContainerHotel, ContainerRoom, InfoText, LoadingContainer, Option, PuffLoading, Rooms, Vacancies } from './style';
 import { toast } from 'react-toastify';
 import useToken from '../../../../hooks/useToken';
 import { getRooms } from '../../../../services/hotelApi';
@@ -10,6 +10,8 @@ import { SubmitContainer } from '../../../../components/PersonalInformationForm'
 import Button from '../../../../components/Form/Button';
 import { createReservation } from '../../../../services/reservationApi';
 import { useNavigate } from 'react-router-dom';
+import Puff from '../../../../assets/images/puff_loading.svg';
+import { LoadingButton } from '@mui/lab';
 
 export function Hotels({ hotelInfo }) {
   const token = useToken();
@@ -17,38 +19,43 @@ export function Hotels({ hotelInfo }) {
   const [rooms, setRooms] = useState([]);
   const [isHotelSelected, setHotelSelected] = useState(false);
   const [isRoomSelected, setRoomSelected] = useState(false);
+  const [isLoading, setLoading] = useState(false);
+  const [isButtonLoading, setButtonLoading] = useState(false);
   const [formReservationData, setFormReservationData] = useState({
     roomId: '',
     hotelId: '',
   });
 
-  function handleHotelChange(h) {
+  async function handleHotelChange(h) {
+    setLoading(true);
+
     renderHotel(h);
 
-    if (!h.vacanciesLeft) {
-      toast.error('Não há vagas!');
-    }
-
     setFormReservationData({ ...formReservationData, hotelId: h.id });
-    const promiseRoom = getRooms(h.id, token);
-    promiseRoom
-      .then((response) => {
-        for (let i = 0; i < response.length; i++) {
-          response[i].isSelected = false;
-          setRoomSelected(false);
-        }
 
-        response.sort(function compare(a, b) {
-          if (a.number > b.number) return 1;
-          if (a.number < b.number) return -1;
-          return 0;
-        });
+    try {
+      const promiseRooms = await getRooms(h.id, token);
+      for (let i = 0; i < promiseRooms.length; i++) {
+        promiseRooms[i].isSelected = false;
+        setRoomSelected(false);
+      }
 
-        setRooms(response);
-      })
-      .catch(() => {
-        toast('Algo deu errado, tente novamente.');
+      if (!h.vacanciesLeft) {
+        toast.error('Não há vagas!');
+      }
+
+      promiseRooms.sort(function compare(a, b) {
+        if (a.number > b.number) return 1;
+        if (a.number < b.number) return -1;
+        return 0;
       });
+
+      setRooms(promiseRooms);
+      setLoading(false);
+    } catch {
+      setLoading(false);
+      toast.error('Aconteceu algo de errado. Tente novamente mais tarde.');
+    }
   }
 
   function renderHotel(hotels) {
@@ -89,6 +96,7 @@ export function Hotels({ hotelInfo }) {
     });
 
     setRooms([...rooms]);
+    setLoading(false);
   }
 
   useEffect(() => {
@@ -97,16 +105,19 @@ export function Hotels({ hotelInfo }) {
     }
   }, [isRoomSelected]);
 
-  function handleSubmit() {
-    const promise = createReservation(formReservationData, token);
-    promise
-      .then(() => {
-        toast('Reserva criada com sucesso!');
-        navigate('/dashboard/hotel/reservation');
-      })
-      .catch(() => {
-        return;
-      });
+  async function handleSubmit() {
+    setButtonLoading(true);
+    try {
+      await createReservation(formReservationData, token);
+
+      setButtonLoading(false);
+
+      toast.success('Reserva criada com sucesso!');
+      navigate('/dashboard/hotel/reservation');
+    } catch {
+      setButtonLoading(false);
+      return;
+    }
   }
 
   return (
@@ -132,70 +143,33 @@ export function Hotels({ hotelInfo }) {
         <Container >
           <EmptyInfoText>Ótima pedida! Agora escolha seu quarto:</EmptyInfoText>
           <ContainerRoom>
-            {rooms.map(room => (
-              <Rooms key={room.id} id={room.id} disabled={!room.vacanciesLeft} onClick={() => handleRoomSelection(room)} isRoomFull={!room.vacanciesLeft} isRoomSelected={room.isSelected}>
-                <span>{room?.number}</span>
-                {room.accomodationType === 'Single' ?
-                  room.vacanciesLeft ?
-                    <Vacancies>
-                      {
-                        room.isSelected ?
-                          <IoPerson color={room.isSelected ? '#FF4791' : ''} size={22} />
-                          :
-                          <IoPersonOutline size={22} />
-                      }
-                    </Vacancies>
-                    :
-                    <Vacancies>
-                      <IoPerson color={'#8C8C8C'} size={22} />
-                    </Vacancies>
-                  :
-                  room.accomodationType === 'Double' ?
+            {isLoading ?
+              <LoadingContainer>
+                <PuffLoading src={Puff} />
+              </LoadingContainer>
+              :
+              rooms.map(room => (
+                <Rooms key={room.id} id={room.id} disabled={!room.vacanciesLeft} onClick={() => handleRoomSelection(room)} isRoomFull={!room.vacanciesLeft} isRoomSelected={room.isSelected}>
+                  <span>{room?.number}</span>
+                  {room.accomodationType === 'Single' ?
                     room.vacanciesLeft ?
-                      room.vacanciesLeft === 1 ?
-                        <Vacancies>
-                          {
-                            room.isSelected ?
-                              <IoPerson color={room.isSelected && '#FF4791'} size={22} />
-                              :
-                              <IoPersonOutline size={22} />
-                          }
-                          <IoPerson color='#000' size={22} />
-                        </Vacancies>
-                        :
-                        room.isSelected ?
-                          <Vacancies>
+                      <Vacancies>
+                        {
+                          room.isSelected ?
+                            <IoPerson color={room.isSelected ? '#FF4791' : ''} size={22} />
+                            :
                             <IoPersonOutline size={22} />
-                            <IoPerson color={room.isSelected && '#FF4791'} size={22} />
-                          </Vacancies>
-                          :
-                          <Vacancies>
-                            <IoPersonOutline size={22} />
-                            <IoPersonOutline size={22} />
-                          </Vacancies>
+                        }
+                      </Vacancies>
                       :
                       <Vacancies>
                         <IoPerson color={'#8C8C8C'} size={22} />
-                        <IoPerson color={'#8C8C8C'} size={22} />
                       </Vacancies>
                     :
-                    room.accomodationType === 'Triple' &&
+                    room.accomodationType === 'Double' ?
                       room.vacanciesLeft ?
-                      room.vacanciesLeft === 1 ?
-                        <Vacancies>
-                          {
-                            room.isSelected ?
-                              <IoPerson color={room.isSelected && '#FF4791'} size={22} />
-                              :
-                              <IoPersonOutline size={22} />
-                          }
-                          <IoPerson color='#000' size={22} />
-                          <IoPerson color='#000' size={22} />
-                        </Vacancies>
-                        :
-                        room.vacanciesLeft === 2 ?
+                        room.vacanciesLeft === 1 ?
                           <Vacancies>
-                            <IoPersonOutline size={22} />
                             {
                               room.isSelected ?
                                 <IoPerson color={room.isSelected && '#FF4791'} size={22} />
@@ -208,30 +182,78 @@ export function Hotels({ hotelInfo }) {
                           room.isSelected ?
                             <Vacancies>
                               <IoPersonOutline size={22} />
-                              <IoPersonOutline size={22} />
                               <IoPerson color={room.isSelected && '#FF4791'} size={22} />
                             </Vacancies>
                             :
                             <Vacancies>
                               <IoPersonOutline size={22} />
                               <IoPersonOutline size={22} />
-                              <IoPersonOutline size={22} />
                             </Vacancies>
+                        :
+                        <Vacancies>
+                          <IoPerson color={'#8C8C8C'} size={22} />
+                          <IoPerson color={'#8C8C8C'} size={22} />
+                        </Vacancies>
                       :
-                      <Vacancies>
-                        <IoPerson color={'#8C8C8C'} size={22} />
-                        <IoPerson color={'#8C8C8C'} size={22} />
-                        <IoPerson color={'#8C8C8C'} size={22} />
-                      </Vacancies>
-                }
-              </Rooms>
-            ))}
+                      room.accomodationType === 'Triple' &&
+                        room.vacanciesLeft ?
+                        room.vacanciesLeft === 1 ?
+                          <Vacancies>
+                            {
+                              room.isSelected ?
+                                <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                                :
+                                <IoPersonOutline size={22} />
+                            }
+                            <IoPerson color='#000' size={22} />
+                            <IoPerson color='#000' size={22} />
+                          </Vacancies>
+                          :
+                          room.vacanciesLeft === 2 ?
+                            <Vacancies>
+                              <IoPersonOutline size={22} />
+                              {
+                                room.isSelected ?
+                                  <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                                  :
+                                  <IoPersonOutline size={22} />
+                              }
+                              <IoPerson color='#000' size={22} />
+                            </Vacancies>
+                            :
+                            room.isSelected ?
+                              <Vacancies>
+                                <IoPersonOutline size={22} />
+                                <IoPersonOutline size={22} />
+                                <IoPerson color={room.isSelected && '#FF4791'} size={22} />
+                              </Vacancies>
+                              :
+                              <Vacancies>
+                                <IoPersonOutline size={22} />
+                                <IoPersonOutline size={22} />
+                                <IoPersonOutline size={22} />
+                              </Vacancies>
+                        :
+                        <Vacancies>
+                          <IoPerson color={'#8C8C8C'} size={22} />
+                          <IoPerson color={'#8C8C8C'} size={22} />
+                          <IoPerson color={'#8C8C8C'} size={22} />
+                        </Vacancies>
+                  }
+                </Rooms>
+              ))}
           </ContainerRoom>
           {isRoomSelected &&
             <SubmitContainer>
-              <Button onClick={() => handleSubmit()}>
-                RESERVAR QUARTO
-              </Button>
+              {!isButtonLoading ?
+                <Button onClick={() => handleSubmit()}>
+                  RESERVAR QUARTO
+                </Button>
+                :
+                <LoadingButton sx={{ width: '162.5px' }} variant='contained' loading loadingPosition="start">
+                  Reservando
+                </LoadingButton>
+              }
             </SubmitContainer>
           }
         </Container>

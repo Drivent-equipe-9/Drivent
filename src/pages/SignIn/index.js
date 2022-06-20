@@ -33,9 +33,9 @@ export default function SignIn() {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    
+
     const code = urlParams.get('code');
-    if( code ) {
+    if (code) {
       setIsLoading(true);
       axios.post('http://localhost:4000/oauth/github/login', { code })
         .then((res) => {
@@ -52,7 +52,7 @@ export default function SignIn() {
         });
     }
   }, []);
-  
+
   async function submit(event) {
     event.preventDefault();
     setIsLoading(true);
@@ -66,7 +66,7 @@ export default function SignIn() {
       setIsLoading(false);
       toast('Não foi possível fazer o login!');
     }
-  } 
+  }
 
   return (
     <AuthLayout background={eventInfo.backgroundImageUrl}>
@@ -85,7 +85,7 @@ export default function SignIn() {
               <Button type="submit" color="primary" fullWidth disabled={loadingSignIn}>Entrar</Button>
             </form><Oauth>
               <a href='https://github.com/login/oauth/authorize?client_id=061456318093ba2b5e24'>
-                  Entrar com gitHub
+                Entrar com gitHub
               </a>
             </Oauth>
           </>
