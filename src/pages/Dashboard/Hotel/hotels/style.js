@@ -151,6 +151,20 @@ const Rooms = styled.button`
   }
 `;
 
+const LoadingContainer = styled.div`
+  width: 100%;
+  height: 20vh;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const PuffLoading = styled.img`
+    font-size: 30px;
+    color: #000;
+`;
+
 const Vacancies = styled.div`
   &> * {
     margin: 0;
@@ -165,4 +179,6 @@ export {
   ContainerRoom,
   Rooms,
   Vacancies,
+  LoadingContainer,
+  PuffLoading,
 };

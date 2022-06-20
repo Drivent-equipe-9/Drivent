@@ -28,103 +28,72 @@ export default function Hotel() {
 
   useEffect(() => {
     handleDatabaseCalls();
-    const promise = getReservation(token);
-    promise
-      .then((reservation) => {
-        if (reservation && !changeRoom) {
-          navigate('/dashboard/hotel/reservation');
-          return;
-        }
-      });
-
-    const promiseEnrollment = getPersonalInformations(token);
-    promiseEnrollment
-      .then((response) => {
-        const enrollmentData = response.id;
-
-        const promiseTicket = findTicket(token, enrollmentData);
-        promiseTicket
-          .then((response) => {
-            if (response.withAccommodation) {
-              setAccomodation(true);
-            } else {
-              setAccomodation(false);
-            }
-          })
-          .catch((error) => {
-            console.log(error);
-          });
-      })
-      .catch(() => {
-        setAccomodation(false);
-      });
-
-    const promisePayment = findPayment(token);
-    promisePayment
-      .then((response) => {
-        if (response.isPaid) {
-          setPaid(true);
-        } else {
-          setPaid(false);
-        }
-      })
-      .catch(() => {
-        setPaid(false);
-      });
-
-    renderHotel();
   }, []);
 
   async function handleDatabaseCalls() {
     try {
-      const promiseReservation = getReservation(token);
-      if (promiseReservation.reservation && !changeRoom) {
+      const promiseReserve = await getReservation(token);
+      if (promiseReserve && !changeRoom) {
         navigate('/dashboard/hotel/reservation');
-        return;
       }
-    } catch {
-
+    } catch (error) {
+      console.log('Faça sua reserva.');
     }
-  }
 
-  async function renderHotel() {
     try {
-      const promiseHotel = await getHotelInfo(token);
+      const promiseEnroll = await getPersonalInformations(token);
 
-      let arrayHotel = promiseHotel;
-
-      for (let i = 0; i < promiseHotel.length; i++) {
-        let promise = await getTotalVacanciesByHotelId(promiseHotel[i].id, token);
-        arrayHotel[i].vacanciesLeft = promise.vacanciesLeft;
-        setHotels(arrayHotel);
+      const promiseTicket = await findTicket(token, promiseEnroll.id);
+      if (promiseTicket.withAccommodation) {
+        setAccomodation(true);
+      } else {
+        setAccomodation(false);
       }
-    } catch {
-      toast('Não foi possível carregar as informações dos hoteis!');
-    }
 
-    setLoading(false);
+      const promisePayment = await findPayment(token);
+      if (promisePayment.isPaid) {
+        setPaid(true);
+      } else {
+        setPaid(false);
+      }
+
+      const promiseHotel = await getHotelInfo(token);
+      let hotelArray = promiseHotel;
+      for (let i = 0; i < promiseHotel.length; i++) {
+        let promiseVacancies = await getTotalVacanciesByHotelId(promiseHotel[i].id, token);
+        hotelArray[i].vacanciesLeft = promiseVacancies.vacanciesLeft;
+        setHotels(hotelArray);
+      }
+
+      setLoading(false);
+    } catch {
+      setAccomodation(false);
+      setPaid(false);
+      setLoading(false);
+      toast.error('Não foi possível carregar algumas informações. Por favor, tente novamente mais tarde.');
+    }
   }
 
   return (
     <>
       <StyledTypography variant='h4'>Escolha de hotel e quarto</StyledTypography>
-      {!isPaid ?
-        <ContainerEmptyInfo>
-          <EmptyInfoText>
-            Você precisa ter confirmado pagamento antes <br />
-            de fazer a escolha de hospedagem
-          </EmptyInfoText>
-        </ContainerEmptyInfo>
-        : !hasAccomodation ?
+      {isLoading ?
+        <PuffLoading />
+        :
+        !isPaid ?
           <ContainerEmptyInfo>
             <EmptyInfoText>
-              Sua modalidade de ingresso não inclui hospedagem <br />
-              Prossiga para a escolha de atividades
+              Você precisa ter confirmado pagamento antes <br />
+              de fazer a escolha de hospedagem
             </EmptyInfoText>
           </ContainerEmptyInfo>
-          :
-          isLoading ?
-            <PuffLoading>Loading</PuffLoading>
+          : !hasAccomodation ?
+            <ContainerEmptyInfo>
+              <EmptyInfoText>
+                Sua modalidade de ingresso não inclui hospedagem <br />
+                Prossiga para a escolha de atividades
+              </EmptyInfoText>
+            </ContainerEmptyInfo>
             :
             <Hotels hotelInfo={hotels} setHotels={setHotels} setChangeRoom={setChangeRoom} />
       }
