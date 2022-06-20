@@ -23,7 +23,7 @@ export default function Dashboard() {
 }
 
 const Container = styled.div`
-  padding: 30px;
+  padding: 30px 20px 30px 20px ;
   height: 100%;
   width: 100%;
   overflow-y: auto;
