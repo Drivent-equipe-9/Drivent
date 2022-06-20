@@ -44,6 +44,7 @@ export default function Hotel() {
       const promiseEnroll = await getPersonalInformations(token);
 
       const promiseTicket = await findTicket(token, promiseEnroll.id);
+      console.log(promiseTicket);
       if (promiseTicket.withAccommodation) {
         setAccomodation(true);
       } else {
@@ -70,6 +71,7 @@ export default function Hotel() {
       setAccomodation(false);
       setPaid(false);
       setLoading(false);
+
       toast.error('Não foi possível carregar algumas informações. Por favor, tente novamente mais tarde.');
     }
   }

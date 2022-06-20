@@ -70,6 +70,8 @@ export default function Payment() {
       const promiseUser = await getPersonalInformations(token);
       setHaveInfos(true);
 
+      if (!setHaveInfos) return;
+
       const promiseEvent = await getEventInfo();
       setEventData(promiseEvent);
       setFormData({ ...formData, eventId: promiseEvent.id, enrollmentId: promiseUser.id });
@@ -82,8 +84,11 @@ export default function Payment() {
 
       setLoading(false);
     } catch {
-      toast.error('Não foi possível carregar algumas informações. Por favor, tente novamente mais tarde.');
-      return;
+      setLoading(false);
+
+      if (!haveInfos) return;
+
+      return toast.error('Não foi possível carregar algumas informações. Por favor, tente novamente mais tarde.');
     }
   }
 

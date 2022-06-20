@@ -96,6 +96,7 @@ export function Hotels({ hotelInfo }) {
     });
 
     setRooms([...rooms]);
+    setLoading(false);
   }
 
   useEffect(() => {
