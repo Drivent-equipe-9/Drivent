@@ -162,9 +162,9 @@ const ContainerActivitiesLeft = styled.div`
   }
 
   @media (max-width: 840px) {
-    border-right: 1px solid #d7d7d7;
-
     width: 90%;
+
+    border-right: 1px solid #d7d7d7;
   }
 
 `;
@@ -191,9 +191,9 @@ const ContainerActivitiesRight = styled.div`
   }
 
   @media (max-width: 840px) {
-    border-left: 1px solid #d7d7d7;
-
     width: 93%;
+
+    border-left: 1px solid #d7d7d7;
   }
 `;
 const ContainerActivitiesCenter = styled.div`
@@ -316,6 +316,8 @@ const BoxDiv = styled.div`
     h1 {
       margin-top: 20px;
     }
+
+    align-items: flex-start;
   }
 `;
 
